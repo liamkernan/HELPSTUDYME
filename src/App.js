@@ -4,6 +4,8 @@ import "katex/dist/katex.min.css";
 import { BlockMath } from "react-katex";
 import "./App.css";
 
+//yes
+
 // Component imports
 import Header from "./components/Header";
 import MainMenu from "./components/MainMenu";
