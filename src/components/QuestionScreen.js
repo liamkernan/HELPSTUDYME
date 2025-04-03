@@ -63,7 +63,7 @@ function QuestionScreen({
     return (
         <div className="question-screen p-6">
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold">
+                <h2 className="text-white text-2xl font-bold">
                     {activeSubject && formatSubjectName(activeSubject)} Question
                 </h2>
                 <button
@@ -76,8 +76,8 @@ function QuestionScreen({
 
             {loading ? (
                 <div className="flex flex-col items-center justify-center py-16">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-                    <p>Generating question...</p>
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pastelBlue mb-4"></div>
+                    <p className="text-white">Generating question...</p>
                 </div>
             ) : (
                 <div className="bg-white p-6 rounded-lg shadow-md">

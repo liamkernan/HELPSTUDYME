@@ -2,26 +2,28 @@
 import React from "react";
 
 function MainMenu({ onSelectSubject }) {
+
     const subjects = [
-        { id: "calcAB", name: "Calculus AB", color: "bg-blue-500", hoverColor: "bg-blue-600" },
-        { id: "calcBC", name: "Calculus BC", color: "bg-blue-500", hoverColor: "bg-blue-600" },
-        { id: "stats", name: "Statistics", color: "bg-green-500", hoverColor: "bg-green-600" },
-        { id: "bio", name: "Biology", color: "bg-green-500", hoverColor: "bg-green-600" },
-        { id: "physicsC", name: "Physics C", color: "bg-purple-500", hoverColor: "bg-purple-600" },
-        { id: "usHistory", name: "US History", color: "bg-red-500", hoverColor: "bg-red-600" },
-        { id: "chem", name: "Chemistry", color: "bg-yellow-500", hoverColor: "bg-yellow-600" },
-        { id: "euroHistory", name: "European History", color: "bg-red-500", hoverColor: "bg-red-600" },
-        { id: "psych", name: "Psychology", color: "bg-pink-500", hoverColor: "bg-pink-600" },
-        { id: "compSci", name: "Computer Science A", color: "bg-indigo-500", hoverColor: "bg-indigo-600" },
-        { id: "humanGeo", name: "Human Geography", color: "bg-teal-500", hoverColor: "bg-teal-600" },
-        { id: "lit", name: "Literature", color: "bg-amber-500", hoverColor: "bg-amber-600" }
+        { id: "calcAB", name: "Calculus AB 📐", color: "bg-blue-500", hoverColor: "bg-blue-600" },
+        { id: "calcBC", name: "Calculus BC 📏", color: "bg-blue-500", hoverColor: "bg-blue-600" },
+        { id: "stats", name: "Statistics 📊", color: "bg-green-500", hoverColor: "bg-green-600" },
+        { id: "bio", name: "Biology 🧬", color: "bg-green-500", hoverColor: "bg-green-600" },
+        { id: "physicsC", name: "Physics C ⚛️", color: "bg-purple-500", hoverColor: "bg-purple-600" },
+        { id: "usHistory", name: "US History 🗽", color: "bg-red-500", hoverColor: "bg-red-600" },
+        { id: "chem", name: "Chemistry 🧪", color: "bg-yellow-500", hoverColor: "bg-yellow-600" },
+        { id: "euroHistory", name: "European History 🏰", color: "bg-red-500", hoverColor: "bg-red-600" },
+        { id: "psych", name: "Psychology 🧠", color: "bg-pink-500", hoverColor: "bg-pink-600" },
+        { id: "compSci", name: "Computer Science A 💻", color: "bg-indigo-500", hoverColor: "bg-indigo-600" },
+        { id: "humanGeo", name: "Human Geography 🌍", color: "bg-teal-500", hoverColor: "bg-teal-600" },
+        { id: "lit", name: "Literature 📚", color: "bg-amber-500", hoverColor: "bg-amber-600" }
     ];
 
     return (
-        <div className="max-w-5xl mx-auto mt-10 p-8 bg-white rounded-xl shadow-lg">
-            <h1 className="text-3xl font-bold mb-2 text-center text-gray-800">AP Practice Questions</h1>
-            <p className="text-center text-gray-600 mb-8">Select a subject to get a random question</p>
+        <div className="max-w-5xl mx-auto mt-10 p-8 bg-pastelBlue rounded-xl shadow-lg">
+            <h1 className="text-3xl font-bold mb-2 text-center text-blue-900">AP Practice Questions</h1>
+            <p className="text-center text-blue-950 mb-8">Select a subject to get a random question</p>
 
+            {/* Replace the old container with this new grid container */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {subjects.map((subject) => (
                     <button

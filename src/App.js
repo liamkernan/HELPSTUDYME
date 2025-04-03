@@ -4,8 +4,6 @@ import "katex/dist/katex.min.css";
 import { BlockMath } from "react-katex";
 import "./App.css";
 
-//yes
-
 // Component imports
 import Header from "./components/Header";
 import MainMenu from "./components/MainMenu";
@@ -175,7 +173,7 @@ function App() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-gray-100">
+        <div className="min-h-screen flex flex-col bg-blue-950">
             <Header />
             <main className="flex-grow container mx-auto p-4">
                 {currentScreen === "home" && (

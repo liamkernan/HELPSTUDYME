@@ -3,9 +3,9 @@ import React from "react";
 
 function Header() {
     return (
-        <header className="bg-blue-600 text-white p-4 shadow-md">
-            <h1 className="text-2xl font-bold">AP Practice Platform</h1>
-            <p className="text-sm">Multiple choice and free response practice with AI feedback</p>
+        <header className="bg-blue-900 text-white p-4 shadow-md">
+            <h1 className="text-2xl font-bold">HELP ME STUDY!</h1>
+            <p className="text-sm">Using AI as a resource to help students test better.</p>
         </header>
     );
 }
