@@ -23,7 +23,7 @@ function MainMenu({ onSelectSubject }) {
             <h1 className="text-3xl font-bold mb-2 text-center text-blue-900">AP Practice Questions</h1>
             <p className="text-center text-blue-950 mb-8">Select a subject to get a random question</p>
 //hi
-            {/* Replace the old container with this new grid container */}
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {subjects.map((subject) => (
                     <button
