@@ -1,4 +1,3 @@
-// src/main/java/com/yourpackage/model/EvaluationRequest.java
 package com.yourpackage.model;
 
 public class EvaluationRequest {
