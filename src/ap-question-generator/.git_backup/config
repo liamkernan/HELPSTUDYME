@@ -1,0 +1,10 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[remote "origin2"]
+	url = https://github.com/liamkernan/HELPSTUDY.ME.git
+	fetch = +refs/heads/*:refs/remotes/origin2/*
