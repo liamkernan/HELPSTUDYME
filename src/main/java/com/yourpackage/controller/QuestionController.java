@@ -1,6 +1,8 @@
 // Update QuestionController.java
 package com.yourpackage.controller;
 
+import java.util.*;
+import com.yourpackage.model.HistoryEvaluation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.yourpackage.service.OpenAIService;
@@ -22,6 +24,11 @@ public class QuestionController {
     public String generateQuestion(@PathVariable String subject, @RequestParam(required = false, defaultValue = "multiple-choice") String type) {
         String prompt = getPromptForSubject(subject, type);
         return openAIService.generateQuestion(prompt, type);
+    }
+
+    @GetMapping("/question-history")
+    public List<HistoryEvaluation> getQuestionHistory() {
+        return HistoryEvaluation.list;
     }
 
     // Endpoint to evaluate free response answers

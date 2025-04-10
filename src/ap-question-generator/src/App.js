@@ -1,16 +1,34 @@
-// App.js (Updated version)
 import React, { useState } from "react";
 import "katex/dist/katex.min.css";
 import { BlockMath } from "react-katex";
 import "./App.css";
 
-// Component imports
 import Header from "./components/Header";
 import MainMenu from "./components/MainMenu";
 import QuestionScreen from "./components/QuestionScreen";
 import FreeResponseScreen from "./components/FreeResponseScreen";
 import QuestionTypeSelector from "./components/QuestionTypeSelector";
 import Footer from "./components/Footer";
+import QuestionHistory from "./components/QuestionHistory";
+
+// Helper function to format free-response questions (placed after your imports)
+const formatFreeResponseQuestion = (text) => {
+    let formattedText = text;
+
+    // Step 1: Replace markers that have asterisks on both sides (e.g., ***A.***)
+    formattedText = formattedText.replace(/\s*\*+\s*([A-Z]\.)\s*\*+\s*/g, "\n\n$1 ");
+
+    // Step 2: Replace markers where asterisks only appear on the left
+    formattedText = formattedText.replace(/\s*\*+\s*([A-Z]\.)/g, "\n\n$1 ");
+
+    // Step 3: Replace markers where asterisks only appear on the right
+    formattedText = formattedText.replace(/([A-Z]\.)\s*\*+\s*/g, "\n\n$1 ");
+
+    // Step 4: Remove any stray asterisks that remain, if any
+    formattedText = formattedText.replace(/\*+/g, '');
+
+    return formattedText.trim();
+};
 
 function App() {
     const [currentScreen, setCurrentScreen] = useState("home"); // Options: home, type-select, question, free-response
@@ -24,8 +42,9 @@ function App() {
     const [answerSubmitted, setAnswerSubmitted] = useState(false);
     const [feedbackData, setFeedbackData] = useState(null);
 
+    // Single fetchQuestion function with formatting for free-response questions
     const fetchQuestion = async (subject, questionType) => {
-        console.log(`Starting fetch for subject: ${subject}, type: ${questionType}`);
+        console.log(`Starting fetch: ${subject}, type: ${questionType}`);
         setLoading(true);
         setActiveSubject(subject);
         setSelectedAnswer(null);
@@ -41,12 +60,11 @@ function App() {
         }
 
         try {
-            // Important: Use encodeURIComponent to properly handle spaces in the subject name
             const url = `http://localhost:8080/api/question/${encodeURIComponent(subject)}?type=${questionType}`;
             console.log(`Fetching from: ${url}`);
 
             const response = await fetch(url);
-            console.log(`Response statusss: ${response.status}`);
+            console.log(`Response status: ${response.status}`);
 
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -59,10 +77,7 @@ function App() {
                 throw new Error("Empty response received from server");
             }
 
-            setQuestion(data);
-
             if (questionType === "multiple-choice") {
-                // Process the question response for multiple choice
                 let correctAnswerLetter = null;
                 let processedText = data;
 
@@ -76,10 +91,10 @@ function App() {
                     // Fallback patterns for finding the correct answer
                     const patterns = [
                         /([A-D])\).*?\*\*\*/,
-                        /\*\*\*\s*([A-D])\)/,
-                        /\*\*\*.*?([A-D])\)/,
+                        /\*\*\*\s*([A-D]\))/,
+                        /\*\*\*.*?([A-D]\))/,
                         /([A-D])\).*?correct.*?\*\*\*/i,
-                        /\*\*\*.*?correct.*?([A-D])\)/i
+                        /\*\*\*.*?correct.*?([A-D]\))/i
                     ];
 
                     for (const pattern of patterns) {
@@ -101,7 +116,6 @@ function App() {
                     }
                 }
 
-                // Default to A if no marker found
                 if (!correctAnswerLetter) {
                     console.log("Could not detect correct answer, defaulting to A");
                     correctAnswerLetter = "A";
@@ -109,23 +123,30 @@ function App() {
 
                 setQuestion(processedText);
                 setCorrectAnswer(correctAnswerLetter);
+            } else {
+                // For free-response questions, apply the formatting
+                setQuestion(formatFreeResponseQuestion(data));
             }
         } catch (error) {
             console.error("Error fetching question:", error);
-            setQuestion("Error fetching question. Please try again.");
+            setQuestion("Liam's API isn't connecting!!! Please try again... 😅");
         } finally {
             setLoading(false);
         }
     };
 
+    // ... Other handlers remain unchanged ...
+
+    const handleViewHistory = () => {
+        setCurrentScreen("history");
+    };
+
     const handleSubjectSelect = (subject) => {
-        // When a subject is selected, show the question type selector
         setActiveSubject(subject);
         setCurrentScreen("type-select");
     };
 
     const handleTypeSelect = (type) => {
-        // When a question type is selected, fetch the appropriate question
         fetchQuestion(activeSubject, type);
     };
 
@@ -177,7 +198,10 @@ function App() {
             <Header />
             <main className="flex-grow container mx-auto p-4">
                 {currentScreen === "home" && (
-                    <MainMenu onSelectSubject={handleSubjectSelect} />
+                    <MainMenu
+                        onSelectSubject={handleSubjectSelect}
+                        onViewHistory={handleViewHistory}  // Pass the handler here
+                    />
                 )}
                 {currentScreen === "type-select" && (
                     <QuestionTypeSelector
@@ -211,6 +235,9 @@ function App() {
                         onBackToMenu={handleBackToMenu}
                         feedbackData={feedbackData}
                     />
+                )}
+                {currentScreen === "history" && (
+                    <QuestionHistory onBackToMenu={handleBackToMenu} />
                 )}
             </main>
             <Footer />
