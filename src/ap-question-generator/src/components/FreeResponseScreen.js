@@ -44,12 +44,12 @@ function FreeResponseScreen({
 
             {loading ? (
                 <div className="flex flex-col items-center justify-center py-16">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-                    <p>Generating question...</p>
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-300 mb-4"></div>
+                    <p className={"text-blue-50"}>Generating question...</p>
                 </div>
             ) : (
                 <div className="bg-white p-6 rounded-lg shadow-md">
-                    <div className="question-text mb-6">
+                    <div className="question-text mb-6" style={{ whiteSpace: "pre-wrap" }}>
                         {question}
                     </div>
 
@@ -71,7 +71,7 @@ function FreeResponseScreen({
                                     disabled={isSubmitting || !userResponse.trim()}
                                     className={`px-6 py-2 rounded-lg ${
                                         isSubmitting || !userResponse.trim()
-                                            ? "bg-gray-300 cursor-not-allowed"
+                                            ? "bg-blue-300 cursor-not-allowed"
                                             : "bg-blue-600 hover:bg-blue-700 text-white"
                                     }`}
                                 >
@@ -79,7 +79,7 @@ function FreeResponseScreen({
                                 </button>
                                 <button
                                     onClick={onNewQuestion}
-                                    className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg"
+                                    className="bg-yellow-200 hover:bg-yellow-300 px-4 py-2 rounded-lg"
                                 >
                                     New Question
                                 </button>

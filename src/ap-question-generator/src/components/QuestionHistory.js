@@ -1,12 +1,12 @@
-// src/components/QuestionScreen.js
+// src/components/QuestionHistory.js
 import React, { useEffect, useState } from "react";
 
-function QuestionHistory() {
-    // State to store the retrieved data
+function QuestionHistory({ onBackToMenu }) {
     const [questions, setQuestions] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Replace with your actual backend endpoint URL
         fetch("http://localhost:8080/api/question-history")
             .then((response) => {
                 if (!response.ok) {
@@ -15,13 +15,23 @@ function QuestionHistory() {
                 return response.json();
             })
             .then((data) => {
-                // Assuming data is an array of objects like: { prompt: "...", correct: true/false }
                 setQuestions(data);
+                setLoading(false);
             })
-            .catch((error) => {
-                console.error("Error fetching question history:", error);
+            .catch((err) => {
+                console.error("Error fetching question history:", err);
+                setError(err.message);
+                setLoading(false);
             });
-    }, []); // Runs once on component mount
+    }, []);
+
+    if (loading) {
+        return <div className="p-6"><p>Loading...</p></div>;
+    }
+
+    if (error) {
+        return <div className="p-6"><p>Error: {error}</p></div>;
+    }
 
     return (
         <div className="p-6">
@@ -41,8 +51,14 @@ function QuestionHistory() {
                     ))}
                 </ul>
             )}
+            <button
+                onClick={onBackToMenu}
+                className="mt-4 p-3 bg-blue-500 text-white rounded-lg"
+            >
+                Back to Menu
+            </button>
         </div>
     );
 }
 
-export default QuestionScreen;
+export default QuestionHistory;
