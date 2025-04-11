@@ -42,9 +42,9 @@ function QuestionHistory({ onBackToMenu }) {
                 <ul className="space-y-2">
                     {questions.map((q, index) => (
                         <li key={index} className="p-4 border rounded-lg">
-                            <p className="font-semibold">Prompt:</p>
-                            <p>{q.prompt}</p>
-                            <p className="mt-2">
+                            <p className=" text-white font-semibold">Prompt:</p>
+                            <p className ="text-white">{q.prompt}</p>
+                            <p className="text-white mt-2">
                                 Result: {q.correct ? "Correct" : "Incorrect"}
                             </p>
                         </li>

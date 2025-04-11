@@ -1,18 +1,19 @@
 package com.yourpackage.model;
 
-import java.util.*;
+import java.util.ArrayList;
 
 public class HistoryEvaluation {
 
-    public static ArrayList<HistoryEvaluation> list = new ArrayList<HistoryEvaluation>();
+    public static ArrayList<HistoryEvaluation> total = new ArrayList<>();
     private String prompt;
-    private boolean correct = true;
+    private boolean correct;
+    private String questionType;
 
-
+    // Updated constructor to include questionType
     public HistoryEvaluation(String prompt, boolean correct){
         this.prompt = prompt;
         this.correct = correct;
-        list.add(this);
+        total.add(this);
     }
 
     public String getPrompt(){
@@ -23,4 +24,7 @@ public class HistoryEvaluation {
         return correct;
     }
 
+    public static ArrayList<HistoryEvaluation> getTotal(){
+        return total;
+    }
 }
