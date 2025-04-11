@@ -45,7 +45,7 @@ public class OpenAIService {
 
             var futureChat = openAI.chatCompletions().create(chatRequest);
             var chatResponse = futureChat.join();
-
+            HistoryEvaluation historyEvaluation = new HistoryEvaluation(chatResponse.firstContent(), true);
             return chatResponse.firstContent();
         } catch (OpenAIException e) {
             e.printStackTrace();
@@ -80,7 +80,6 @@ public class OpenAIService {
             var futureChat = openAI.chatCompletions().create(chatRequest);
             var chatResponse = futureChat.join();
             String jsonResponse = chatResponse.firstContent();
-            HistoryEvaluation historyEvaluation = new HistoryEvaluation(jsonResponse, true);
             return objectMapper.readValue(jsonResponse, FreeResponseEvaluation.class);
 
         } catch (Exception e) {
