@@ -11,7 +11,7 @@ import QuestionTypeSelector from "./components/QuestionTypeSelector";
 import Footer from "./components/Footer";
 import QuestionHistory from "./components/QuestionHistory";
 
-// Helper function to format free-response questions (placed after your imports)
+// Helper function to format free-response questions
 const formatFreeResponseQuestion = (text) => {
     let formattedText = text;
 
@@ -42,7 +42,6 @@ function App() {
     const [answerSubmitted, setAnswerSubmitted] = useState(false);
     const [feedbackData, setFeedbackData] = useState(null);
 
-    // Single fetchQuestion function with formatting for free-response questions
     const fetchQuestion = async (subject, questionType) => {
         console.log(`Starting fetch: ${subject}, type: ${questionType}`);
         setLoading(true);
@@ -81,7 +80,7 @@ function App() {
                 let correctAnswerLetter = null;
                 let processedText = data;
 
-                // Extract correct answer marker
+                //correct answer marker
                 const directMarkerMatch = data.match(/([A-D])\)\s*\*\*\*/);
                 if (directMarkerMatch) {
                     correctAnswerLetter = directMarkerMatch[1];
@@ -134,8 +133,6 @@ function App() {
             setLoading(false);
         }
     };
-
-    // ... Other handlers remain unchanged ...
 
     const handleViewHistory = () => {
         setCurrentScreen("history");
