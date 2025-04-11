@@ -72,7 +72,7 @@ public class OpenAIService {
                     .model("gpt-4o")
                     .message(ChatMessage.SystemMessage.of(systemPrompt))
                     .message(ChatMessage.UserMessage.of(userPrompt))
-                    .temperature(0.3)
+                    .temperature(0.9)
                     .maxCompletionTokens(1000)
 
                     .build();
