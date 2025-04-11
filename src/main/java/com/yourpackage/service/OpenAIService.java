@@ -30,7 +30,7 @@ public class OpenAIService {
             String systemPrompt;
 
             if ("free-response".equals(type)) {
-                systemPrompt = "You are an expert on all AP classes. Create challenging and detailed free response questions. Only provide the question and any necessary context. No sample answers or solutions. Make sure to mark ONLY THE BEGINNING of each section of the question (for example, A. B. C. D.) with 5 astricks (*****) after. the Make sure the question is appropriate for AP-level assessment.";
+                systemPrompt = "You are an expert on all AP classes. Create challenging and detailed free response questions. Only provide the question and any necessary context. No sample answers or solutions. Make sure to mark ONLY THE BEGINNING of each section of the question (for example, A. B. C. D.) with 5 astricks (*****) after. Make sure the question is appropriate for AP-level assessment. If the subject is literature or US history, european history, or human geography, include texts for the student to read. Start your response with the context section.";
             } else {
                 systemPrompt = "You are an expert on all AP classes. Create challenging and full length questions. Only provide the question and 4 multiple choice options. Mark the correct multiple choice option with *** after its letter. No extra text or explanations.";
             }
@@ -40,7 +40,7 @@ public class OpenAIService {
                     .message(ChatMessage.SystemMessage.of(systemPrompt))
                     .message(ChatMessage.UserMessage.of(prompt))
                     .temperature(0.9)
-                    .maxCompletionTokens(1000)
+                    .maxCompletionTokens(2500)
                     .build();
 
             var futureChat = openAI.chatCompletions().create(chatRequest);
