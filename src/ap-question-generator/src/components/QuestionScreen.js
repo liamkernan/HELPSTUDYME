@@ -44,11 +44,9 @@ function QuestionScreen({
 
     const options = parseOptions();
 
-    // Function to handle math expressions in text
     const renderWithMath = (text) => {
         if (!text) return null;
 
-        // Split by math delimiters (assuming $$ for display math)
         const parts = text.split(/(\$\$.*?\$\$)/s);
 
         return parts.map((part, index) => {

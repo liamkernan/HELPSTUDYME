@@ -1,4 +1,3 @@
-// Update QuestionController.java
 package com.yourpackage.controller;
 
 import java.util.*;
@@ -27,6 +26,15 @@ public class QuestionController {
     @GetMapping("/question-history")
     public List<HistoryEvaluation> getQuestionHistory() {
         return HistoryEvaluation.getTotal();
+    }
+
+    @PostMapping("/submit-evaluation")
+    public ResponseEntity<HistoryEvaluation> submitEvaluation(
+            @RequestParam("prompt") String prompt,
+            @RequestParam("correct") boolean correct
+    ) {
+        HistoryEvaluation evaluation = new HistoryEvaluation(prompt, correct);
+        return ResponseEntity.ok(evaluation);
     }
 
     @PostMapping("/evaluate")
