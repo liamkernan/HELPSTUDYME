@@ -59,7 +59,6 @@ public class OpenAIService {
         }
     }
 
-    // Evaluate free response answers
     public FreeResponseEvaluation evaluateFreeResponse(String subject, String question, String response) {
         try {
             String systemPrompt = "You are an AP exam scorer with expertise in " + subject + ". " +

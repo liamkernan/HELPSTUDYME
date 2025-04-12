@@ -11,7 +11,6 @@ import QuestionTypeSelector from "./components/QuestionTypeSelector";
 import Footer from "./components/Footer";
 import QuestionHistory from "./components/QuestionHistory";
 
-// Helper function to format free-response questions
 const formatFreeResponseQuestion = (text) => {
     let formattedText = text;
 

@@ -1,4 +1,3 @@
-// src/components/FreeResponseScreen.js
 import React, { useState } from "react";
 
 function FreeResponseScreen({

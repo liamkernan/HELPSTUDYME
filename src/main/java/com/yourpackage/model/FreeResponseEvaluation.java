@@ -1,4 +1,3 @@
-// src/main/java/com/yourpackage/model/FreeResponseEvaluation.java
 package com.yourpackage.model;
 
 public class FreeResponseEvaluation {
