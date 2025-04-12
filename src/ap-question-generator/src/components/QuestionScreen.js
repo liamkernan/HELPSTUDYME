@@ -1,4 +1,3 @@
-// components/QuestionScreen.js
 import React from "react";
 import { BlockMath } from "react-katex";
 

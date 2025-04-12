@@ -1,4 +1,3 @@
-// src/components/MainMenu.js
 import React from "react";
 
 function MainMenu({ onSelectSubject, onViewHistory }) {

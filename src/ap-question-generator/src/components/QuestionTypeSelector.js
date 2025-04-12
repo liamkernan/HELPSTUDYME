@@ -1,4 +1,3 @@
-// src/components/QuestionTypeSelector.js
 import React from "react";
 
 function QuestionTypeSelector({ onSelectType, onBack, activeSubject }) {
