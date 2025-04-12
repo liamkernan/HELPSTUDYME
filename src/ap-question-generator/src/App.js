@@ -25,13 +25,13 @@ const formatFreeResponseQuestion = (text) => {
     formattedText = formattedText.replace(/([A-Z]\.)\s*\*+\s*/g, "\n\n$1 ");
 
     // Step 4: Remove any stray asterisks that remain, if any
-    formattedText = formattedText.replace(/\*+/g, '');
+    formattedText = formattedText.replace(/\*+/g, "");
 
     return formattedText.trim();
 };
 
 function App() {
-    const [currentScreen, setCurrentScreen] = useState("home"); // Options: home, type-select, question, free-response
+    const [currentScreen, setCurrentScreen] = useState("home"); // Options: home, type-select, question, free-response, history
     const [question, setQuestion] = useState("");
     const [loading, setLoading] = useState(false);
     const [activeSubject, setActiveSubject] = useState(null);
@@ -52,6 +52,7 @@ function App() {
         setAnswerSubmitted(false);
         setFeedbackData(null);
 
+        // Set the correct screen based on the question type
         if (questionType === "multiple-choice") {
             setCurrentScreen("question");
         } else {
@@ -72,63 +73,66 @@ function App() {
             const data = await response.text();
             console.log(`Response data received, length: ${data.length}`);
 
-            if (!data || data.trim() === '') {
+            if (!data || data.trim() === "") {
                 throw new Error("Empty response received from server");
             }
 
             if (questionType === "multiple-choice") {
-                let correctAnswerLetter = null;
-                let processedText = data;
-
-                //correct answer marker
-                const directMarkerMatch = data.match(/([A-D])\)\s*\*\*\*/);
-                if (directMarkerMatch) {
-                    correctAnswerLetter = directMarkerMatch[1];
-                    console.log(`Found direct marker match for answer: ${correctAnswerLetter}`);
-                    processedText = data.replace(/\*\*\*/g, '');
-                } else {
-                    // Fallback patterns for finding the correct answer
+                // Helper function to parse the question text and detect the correct answer
+                function parseMultipleChoiceQuestion(rawText) {
+                    let correctAnswerLetter = null;
                     const patterns = [
+                        // Direct marker: letter followed by a parenthesis, optional space, then the marker ***
+                        /([A-D])\)\s*\*\*\*/,
+                        // Other formatting variants
                         /([A-D])\).*?\*\*\*/,
                         /\*\*\*\s*([A-D]\))/,
                         /\*\*\*.*?([A-D]\))/,
+                        // Look for the word "correct" near the option indicator
                         /([A-D])\).*?correct.*?\*\*\*/i,
                         /\*\*\*.*?correct.*?([A-D]\))/i
                     ];
 
+                    // Try each pattern in order
                     for (const pattern of patterns) {
-                        const match = data.match(pattern);
+                        const match = rawText.match(pattern);
                         if (match) {
                             correctAnswerLetter = match[1];
-                            console.log(`Found answer using pattern: ${correctAnswerLetter}`);
-                            processedText = data.replace(/\*\*\*/g, '');
+                            console.log(`Detected correct answer: ${correctAnswerLetter} using pattern: ${pattern}`);
                             break;
                         }
                     }
 
+                    // If nothing matched, try a fallback search using the "correct" keyword
                     if (!correctAnswerLetter) {
-                        const correctMatch = data.match(/([A-D])\).*?(correct answer|is correct)/i);
-                        if (correctMatch) {
-                            correctAnswerLetter = correctMatch[1];
-                            console.log(`Found answer by "correct" keyword: ${correctAnswerLetter}`);
+                        const fallbackMatch = rawText.match(/([A-D])\).*?(correct answer|is correct)/i);
+                        if (fallbackMatch) {
+                            correctAnswerLetter = fallbackMatch[1];
+                            console.log(`Fallback detected correct answer: ${correctAnswerLetter}`);
                         }
                     }
+
+                    // Default to "A" if still not detected
+                    if (!correctAnswerLetter) {
+                        console.warn("Correct answer not detected, defaulting to A");
+                        correctAnswerLetter = "A";
+                    }
+
+                    // Remove any *** markers from the text
+                    const processedText = rawText.replace(/\*\*\*/g, "");
+                    return { processedText, correctAnswerLetter };
                 }
 
-                if (!correctAnswerLetter) {
-                    console.log("Could not detect correct answer, defaulting to A");
-                    correctAnswerLetter = "A";
-                }
-
+                // Process the response data using the helper function
+                const { processedText, correctAnswerLetter } = parseMultipleChoiceQuestion(data);
                 setQuestion(processedText);
                 setCorrectAnswer(correctAnswerLetter);
             } else {
-                // For free-response questions, apply the formatting
-                setQuestion(formatFreeResponseQuestion(data));
+                // For free-response questions, set the question directly (or format if needed)
+                setQuestion(data);
             }
         } catch (error) {
             console.error("Error fetching question:", error);
-            setQuestion("Liam's API isn't connecting!!! Please try again... 😅");
         } finally {
             setLoading(false);
         }
@@ -152,18 +156,44 @@ function App() {
         setAnswerSubmitted(true);
     };
 
+    const submitEvaluation = async (prompt, correct) => {
+        try {
+            const response = await fetch("http://localhost:8080/api/submit-evaluation", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ prompt, correct }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+
+            const evaluation = await response.json();
+            console.log("Evaluation submitted:", evaluation);
+        } catch (error) {
+            console.error("Error submitting evaluation:", error);
+        }
+    };
+
+    // Example usage when the user submits an answer:
+    const userPrompt = "Explain the causes of the French Revolution.";
+    const userGotItCorrect = true;
+    submitEvaluation(userPrompt, userGotItCorrect);
+
     const handleSubmitFreeResponse = async (responseText) => {
         try {
             const response = await fetch(`http://localhost:8080/api/evaluate`, {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     subject: activeSubject,
                     question: question,
-                    response: responseText
-                })
+                    response: responseText,
+                }),
             });
 
             if (!response.ok) {
@@ -172,14 +202,13 @@ function App() {
 
             const feedbackResponse = await response.json();
             setFeedbackData(feedbackResponse);
-
         } catch (error) {
             console.error("Error submitting response:", error);
             setFeedbackData({
                 feedback: "An error occurred while evaluating your response. Please try again.",
                 score: "N/A",
                 maxScore: "9",
-                scoreExplanation: "Could not evaluate due to an error."
+                scoreExplanation: "Could not evaluate due to an error.",
             });
         }
     };
@@ -197,7 +226,7 @@ function App() {
                 {currentScreen === "home" && (
                     <MainMenu
                         onSelectSubject={handleSubjectSelect}
-                        onViewHistory={handleViewHistory}  // Pass the handler here
+                        onViewHistory={handleViewHistory}
                     />
                 )}
                 {currentScreen === "type-select" && (
@@ -233,9 +262,7 @@ function App() {
                         feedbackData={feedbackData}
                     />
                 )}
-                {currentScreen === "history" && (
-                    <QuestionHistory onBackToMenu={handleBackToMenu} />
-                )}
+                {currentScreen === "history" && <QuestionHistory onBackToMenu={handleBackToMenu} />}
             </main>
             <Footer />
         </div>

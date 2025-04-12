@@ -26,26 +26,32 @@ public class OpenAIService {
 
     // Generate AP-level practice questions
     public String generateQuestion(String prompt, String type) {
+        int creditdiff;
+        String model;
         try {
             String systemPrompt;
 
             if ("free-response".equals(type)) {
-                systemPrompt = "You are an expert on all AP classes. Create challenging and detailed free response questions. Only provide the question and any necessary context. No sample answers or solutions. Make sure to mark ONLY THE BEGINNING of each section of the question (for example, A. B. C. D.) with 5 astricks (*****) after. Make sure the question is appropriate for AP-level assessment. If the subject is literature or US history, european history, or human geography, include texts for the student to read. Start your response with the context section.";
+                systemPrompt = "You are an expert on all AP classes. Create challenging and detailed free response questions. Only provide the question and any necessary context. No sample answers or solutions. Make sure to mark ONLY THE BEGINNING of each section of the question (for example, A. B. C. D.) with 5 astricks (*****) after. Make sure the question is appropriate for AP-level assessment. Make sure to include texts and context for the student to read, if there are background documents include them entirely. Start your response with the context section.";
+                creditdiff = 4000;
+                model = "gpt-4o";
             } else {
-                systemPrompt = "You are an expert on all AP classes. Create challenging and full length questions. Only provide the question and 4 multiple choice options. Mark the correct multiple choice option with *** after its letter. No extra text or explanations.";
+                systemPrompt = "You are an expert on all AP classes. Create challenging and full length questions. Only provide the question and 4 multiple choice options, and the choices should be marked with the letters A B C D accordingly. Mark the correct multiple choice option with *** after its letter. No extra text or explanations.";
+                creditdiff = 1000;
+                model = "gpt-4o";
             }
 
             var chatRequest = ChatRequest.builder()
-                    .model("gpt-4o")
+                    .model(model)
                     .message(ChatMessage.SystemMessage.of(systemPrompt))
                     .message(ChatMessage.UserMessage.of(prompt))
-                    .temperature(0.9)
-                    .maxCompletionTokens(2500)
+                    .temperature(0.8)
+                    .maxCompletionTokens(creditdiff)
                     .build();
 
             var futureChat = openAI.chatCompletions().create(chatRequest);
             var chatResponse = futureChat.join();
-            HistoryEvaluation historyEvaluation = new HistoryEvaluation(chatResponse.firstContent(), true);
+            HistoryEvaluation historyEvaluation = new HistoryEvaluation(chatResponse.firstContent(), false);
             return chatResponse.firstContent();
         } catch (OpenAIException e) {
             e.printStackTrace();
@@ -72,8 +78,8 @@ public class OpenAIService {
                     .model("gpt-4o")
                     .message(ChatMessage.SystemMessage.of(systemPrompt))
                     .message(ChatMessage.UserMessage.of(userPrompt))
-                    .temperature(0.9)
-                    .maxCompletionTokens(1000)
+                    .temperature(0.5)
+                    .maxCompletionTokens(1500)
 
                     .build();
 

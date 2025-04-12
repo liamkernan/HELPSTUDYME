@@ -1,4 +1,3 @@
-// src/components/QuestionHistory.js
 import React, { useEffect, useState } from "react";
 
 function QuestionHistory({ onBackToMenu }) {
