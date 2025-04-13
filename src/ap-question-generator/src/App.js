@@ -51,7 +51,6 @@ function App() {
         setAnswerSubmitted(false);
         setFeedbackData(null);
 
-        // Set the correct screen based on the question type
         if (questionType === "multiple-choice") {
             setCurrentScreen("question");
         } else {
@@ -122,12 +121,10 @@ function App() {
                     return { processedText, correctAnswerLetter };
                 }
 
-                // Process the response data using the helper function
                 const { processedText, correctAnswerLetter } = parseMultipleChoiceQuestion(data);
                 setQuestion(processedText);
                 setCorrectAnswer(correctAnswerLetter);
             } else {
-                // For free-response questions, set the question directly (or format if needed)
                 setQuestion(data);
             }
         } catch (error) {
@@ -176,7 +173,7 @@ function App() {
         }
     };
 
-    // Example usage when the user submits an answer:
+    //example
     const userPrompt = "Explain the causes of the French Revolution.";
     const userGotItCorrect = true;
     submitEvaluation(userPrompt, userGotItCorrect);
