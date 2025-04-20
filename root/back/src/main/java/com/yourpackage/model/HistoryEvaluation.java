@@ -9,7 +9,6 @@ public class HistoryEvaluation {
     private boolean correct;
     private String questionType;
 
-    // Updated constructor to include questionType
     public HistoryEvaluation(String prompt, boolean correct){
         this.prompt = prompt;
         this.correct = correct;

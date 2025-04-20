@@ -34,11 +34,11 @@ public class OpenAIService {
             if ("free-response".equals(type)) {
                 systemPrompt = "You are an expert on all AP classes. Create challenging and detailed free response questions. Only provide the question and any necessary context. No sample answers or solutions. Make sure to mark ONLY THE BEGINNING of each section of the question (for example, A. B. C. D.) with 5 astricks (*****) after. Make sure the question is appropriate for AP-level assessment. Make sure to include texts and context for the student to read, if there are background documents include them entirely. Start your response with the context section.";
                 creditdiff = 4000;
-                model = "gpt-4o";
+                model = "gpt-4.1";
             } else {
                 systemPrompt = "You are an expert on all AP classes. Create challenging and full length questions. Only provide the question and 4 multiple choice options, and the choices should be marked with the letters A B C D accordingly. Mark the correct multiple choice option with *** after its letter. No extra text or explanations.";
-                creditdiff = 1000;
-                model = "gpt-4o";
+                creditdiff = 2000;
+                model = "gpt-4.1-mini";
             }
 
             var chatRequest = ChatRequest.builder()
@@ -74,11 +74,11 @@ public class OpenAIService {
             String userPrompt = "Question: " + question + "\n\nStudent response: " + response;
 
             var chatRequest = ChatRequest.builder()
-                    .model("gpt-4o")
+                    .model("gpt-4.1")
                     .message(ChatMessage.SystemMessage.of(systemPrompt))
                     .message(ChatMessage.UserMessage.of(userPrompt))
                     .temperature(0.5)
-                    .maxCompletionTokens(1500)
+                    .maxCompletionTokens(2500)
 
                     .build();
 

@@ -5,7 +5,6 @@ public class EvaluationRequest {
     private String question;
     private String response;
 
-    // Getters and Setters
     public String getSubject() {
         return subject;
     }
