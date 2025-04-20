@@ -58,7 +58,7 @@ function App() {
         }
 
         try {
-            const url = `http://localhost:8080/api/question/${encodeURIComponent(subject)}?type=${questionType}`;
+            const url = `https://helpstudy.me/api/question/${encodeURIComponent(subject)}?type=${questionType}`;
             console.log(`Fetching from: ${url}`);
 
             const response = await fetch(url);
