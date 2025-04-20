@@ -113,10 +113,8 @@ function App() {
                 setQuestion(result.processedText);
                 setCorrectAnswer(result.correctAnswerLetter);
 
-                // If the answer needs review, you might want to handle it specially
                 if (result.needsReview) {
                     console.warn("This question needs manual review - correct answer not clearly marked");
-                    // Optionally notify the user or flag for review
                 }
             } else {
                 setQuestion(data);
@@ -167,11 +165,6 @@ function App() {
         }
     };
 
-    //example
-    const userPrompt = "Explain the causes of the French Revolution.";
-    const userGotItCorrect = true;
-    submitEvaluation(userPrompt, userGotItCorrect);
-
     const handleSubmitFreeResponse = async (responseText) => {
         try {
             const response = await fetch(`${API_BASE}/evaluate`, {
@@ -212,6 +205,7 @@ function App() {
     return (
         <div className="min-h-screen flex flex-col bg-blue-950">
             <Header />
+
             <main className="flex-grow container mx-auto p-4">
                 {currentScreen === "home" && (
                     <MainMenu
