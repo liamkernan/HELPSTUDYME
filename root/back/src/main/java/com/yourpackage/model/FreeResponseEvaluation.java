@@ -16,7 +16,6 @@ public class FreeResponseEvaluation {
         this.scoreExplanation = scoreExplanation;
     }
 
-    // Getters and Setters
     public String getFeedback() {
         return feedback;
     }
