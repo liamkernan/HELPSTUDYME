@@ -14,7 +14,6 @@ function QuestionScreen({
                             onNewQuestion,
                             onBackToMenu
                         }) {
-    // Function to format subject name
     const formatSubjectName = (subject) => {
         const words = subject.split('-');
         return words.map(word =>
@@ -22,7 +21,6 @@ function QuestionScreen({
         ).join(' ');
     };
 
-    // Parse options from the question text
     const parseOptions = () => {
         const options = [];
         const letters = ['A', 'B', 'C', 'D'];

@@ -12,23 +12,6 @@ import Footer from "./components/Footer";
 import QuestionHistory from "./components/QuestionHistory";
 
 const API_BASE = process.env.REACT_APP_API_BASE;
-const formatFreeResponseQuestion = (text) => {
-    let formattedText = text;
-
-    // Step 1: Replace markers that have asterisks on both sides (e.g., ***A.***)
-    formattedText = formattedText.replace(/\s*\*+\s*([A-Z]\.)\s*\*+\s*/g, "\n\n$1 ");
-
-    // Step 2: Replace markers where asterisks only appear on the left
-    formattedText = formattedText.replace(/\s*\*+\s*([A-Z]\.)/g, "\n\n$1 ");
-
-    // Step 3: Replace markers where asterisks only appear on the right
-    formattedText = formattedText.replace(/([A-Z]\.)\s*\*+\s*/g, "\n\n$1 ");
-
-    // Step 4: Remove any stray asterisks that remain, if any
-    formattedText = formattedText.replace(/\*+/g, "");
-
-    return formattedText.trim();
-};
 
 function App() {
     const [currentScreen, setCurrentScreen] = useState("home"); // Options: home, type-select, question, free-response, history
