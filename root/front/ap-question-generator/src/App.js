@@ -11,6 +11,7 @@ import QuestionTypeSelector from "./components/QuestionTypeSelector";
 import Footer from "./components/Footer";
 import QuestionHistory from "./components/QuestionHistory";
 
+const API_BASE = process.env.REACT_APP_API_BASE;
 const formatFreeResponseQuestion = (text) => {
     let formattedText = text;
 
@@ -58,8 +59,7 @@ function App() {
         }
 
         try {
-            const url = `https://helpstudy.me/api/question/${encodeURIComponent(subject)}?type=${questionType}`;
-            console.log(`Fetching from: ${url}`);
+            const url = `${API_BASE}/question/${encodeURIComponent(subject)}?type=${questionType}`;            console.log(`Fetching from: ${url}`);
 
             const response = await fetch(url);
             console.log(`Response status: ${response.status}`);
@@ -154,7 +154,7 @@ function App() {
 
     const submitEvaluation = async (prompt, correct) => {
         try {
-            const response = await fetch("http://localhost:8080/api/submit-evaluation", {
+            const response = await fetch(`${API_BASE}/evaluate`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -180,7 +180,7 @@ function App() {
 
     const handleSubmitFreeResponse = async (responseText) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/evaluate`, {
+            const response = await fetch(`${API_BASE}/evaluate`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
