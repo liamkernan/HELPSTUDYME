@@ -19,7 +19,7 @@ function MainMenu({ onSelectSubject, onViewHistory }) {
     return (
         <div className="max-w-5xl mx-auto mt-10 p-8 bg-pastelBlue rounded-xl shadow-lg">
             <h1 className="text-3xl font-bold mb-2 text-center text-blue-900">AP Practice Questions</h1>
-            <p className="text-center text-blue-950 mb-8">Get access to questions created by ChatGPT's o1 model, <b>for free.</b></p>
+            <p className="text-center text-blue-950 mb-8">Get access to questions created by ChatGPT's o3 model, <b>for free.</b></p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {subjects.map((subject) => (
