@@ -1,14 +1,9 @@
-# Use Java 17
 FROM eclipse-temurin:17-jdk
-
-# Set working directory
 WORKDIR /app
-
-# Copy everything into the container
 COPY . .
 
-# Build the Spring Boot jar
-RUN ./mvnw -Dmaven.test.skip=true spring-boot:repackage
+# build **package**, not just repackage
+RUN ./mvnw -Dmaven.test.skip=true package
 
-# Run the jar
+# run the JAR Spring Boot just produced
 CMD ["java", "-jar", "target/*.jar"]
