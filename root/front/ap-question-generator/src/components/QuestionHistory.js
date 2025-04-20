@@ -4,9 +4,10 @@ function QuestionHistory({ onBackToMenu }) {
     const [questions, setQuestions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const API_BASE = process.env.REACT_APP_API_BASE;
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/question-history")
+        fetch(`${API_BASE}/question-history`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
