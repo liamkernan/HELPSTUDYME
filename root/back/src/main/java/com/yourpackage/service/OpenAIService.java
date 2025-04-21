@@ -45,7 +45,7 @@ public class OpenAIService {
                     .model(model)
                     .message(ChatMessage.SystemMessage.of(systemPrompt))
                     .message(ChatMessage.UserMessage.of(prompt))
-                    .temperature(0.8)
+                    .temperature(1.0)
                     .maxCompletionTokens(creditdiff)
                     .build();
 
