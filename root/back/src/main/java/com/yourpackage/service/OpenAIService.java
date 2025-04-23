@@ -36,7 +36,7 @@ public class OpenAIService {
                 creditdiff = 4000;
                 model = "gpt-4.1";
             } else {
-                systemPrompt = "You are an expert on all AP classes. Create challenging and full length questions. Only provide the question and 4 multiple choice options, and the choices should be marked with the letters A B C D accordingly. Mark the correct multiple choice option with *** after its letter. No extra text or explanations.";
+                systemPrompt = "You are an expert on all AP classes. Create challenging and full length multiple choice questions. Only provide the question and 4 multiple choice options, and the choices should be marked with the letters A B C D accordingly. Mark the correct multiple choice option with *** after its letter. No extra text or explanations.";
                 creditdiff = 2000;
                 model = "gpt-4.1-mini";
             }
@@ -46,6 +46,7 @@ public class OpenAIService {
                     .message(ChatMessage.SystemMessage.of(systemPrompt))
                     .message(ChatMessage.UserMessage.of(prompt))
                     .temperature(1.0)
+                    .topP(1.0)
                     .maxCompletionTokens(creditdiff)
                     .build();
 
