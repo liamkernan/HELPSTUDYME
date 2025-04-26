@@ -102,7 +102,6 @@ export default function App() {
         }
     };
 
-    /* navigation helpers */
     const goLanding       = () => setCurrentScreen("landing");
     const goAbout         = () => setCurrentScreen("about");
     const goSubjectSelect = () => setCurrentScreen("subject-select");

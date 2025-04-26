@@ -1,3 +1,4 @@
+// src/components/LandingPage.jsx
 import React, { useEffect, useState } from "react";
 import "katex/dist/katex.min.css";
 import { BlockMath } from "react-katex";
@@ -28,20 +29,31 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
     }, []);
 
     return (
-        <section className="animated-gradient relative h-screen flex flex-col items-center justify-center text-gray-100 px-6">
-            <div className="text-center space-y-8 max-w-3xl">
-                <h1 className="text-6xl font-extrabold tracking-tight leading-tight whitespace-nowrap">
+        <section
+            className="
+        animated-gradient    /* your moving gradient */
+        min-h-screen         /* cover at least full viewport */
+        flex flex-col        /* center content */
+        items-center justify-center
+        text-gray-100
+        px-4 sm:px-6
+      "
+        >
+            <div className="mx-auto max-w-3xl space-y-8 text-center">
+                <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight whitespace-normal sm:whitespace-nowrap">
                     Master&nbsp;
                     <span
                         className={[
-                            "inline-block whitespace-nowrap transition-opacity duration-700",
+                            "inline-block transition-opacity duration-700",
                             fade ? "opacity-100" : "opacity-0",
                             colors[idx],
                         ].join(" ")}
+                        style={{ whiteSpace: "nowrap" }}
                     >
             {words[idx]}
           </span>
-                    &nbsp;the&nbsp;<span className="text-teal-400">Smart</span>&nbsp;Way
+                    &nbsp;the&nbsp;
+                    <span className="text-teal-400">Smart</span>&nbsp;Way
                 </h1>
 
                 <p className="text-lg md:text-xl text-gray-300">
@@ -54,47 +66,39 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
                     <BlockMath math="\int_{\text{effort}=0}^{\text{you}} \!\! \text{Practice}\; d(\text{Time}) = \text{Success}" />
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                <div className="flex flex-col sm:flex-row flex-wrap gap-4 justify-center">
                     <button
                         onClick={onGetStarted}
-                        className="px-6 py-3 bg-teal-500 hover:bg-teal-600 active:bg-teal-700 rounded-2xl font-semibold transition"
+                        className="px-6 py-3 bg-teal-500 hover:bg-teal-600 rounded-2xl font-semibold transition"
                     >
                         Get Started
                     </button>
+
                     {onViewHistory && (
                         <button
                             onClick={onViewHistory}
                             className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-2xl font-semibold transition"
                         >
-                            View History
+                            View Question History
                         </button>
                     )}
+
                     <button
                         onClick={onAbout}
-                        className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-2xl font-semibold transition"
+                        className="px-6 py-3 bg-pastelBlue hover:bg-white/20 rounded-2xl font-semibold transition"
                     >
                         About this Project
                     </button>
                 </div>
             </div>
 
-            <footer className="absolute bottom-4 text-sm text-gray-400">
-                © {new Date().getFullYear()} helpstudy.me • Built with&nbsp;
-                <a
-                    href="https://react.dev"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline hover:text-gray-200"
-                >
+            <footer className="mt-12 text-center text-sm text-gray-400">
+                © {new Date().getFullYear()} helpstudy.me • Built with{" "}
+                <a href="https://react.dev" className="underline hover:text-gray-200" target="_blank" rel="noopener noreferrer">
                     React
                 </a>{" "}
-                &amp;&nbsp;
-                <a
-                    href="https://katex.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline hover:text-gray-200"
-                >
+                &amp;{" "}
+                <a href="https://katex.org" className="underline hover:text-gray-200" target="_blank" rel="noopener noreferrer">
                     KaTeX
                 </a>
             </footer>
