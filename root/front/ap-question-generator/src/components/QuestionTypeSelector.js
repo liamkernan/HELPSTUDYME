@@ -9,6 +9,7 @@ function QuestionTypeSelector({ onSelectType, onBack, activeSubject }) {
     };
 
     return (
+
         <div className="max-w-3xl mx-auto mt-10 p-8 bg-white rounded-xl shadow-lg relative">
             {/* Back Button positioned at top right */}
             <button

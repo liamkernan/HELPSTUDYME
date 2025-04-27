@@ -1,6 +1,7 @@
+// src/components/MainMenu.jsx
 import React from "react";
 
-function MainMenu({ onSelectSubject, onViewHistory }) {
+export default function MainMenu({ onSelectSubject, onViewHistory }) {
     const subjects = [
         { id: "calcAB", name: "Calculus AB 📐", color: "bg-blue-500", hoverColor: "bg-blue-600" },
         { id: "calcBC", name: "Calculus BC 📏", color: "bg-blue-500", hoverColor: "bg-blue-600" },
@@ -17,40 +18,55 @@ function MainMenu({ onSelectSubject, onViewHistory }) {
     ];
 
     return (
-        <div className="max-w-5xl mx-auto mt-10 p-8 bg-pastelBlue rounded-xl shadow-lg">
-            <h1 className="text-3xl font-bold mb-2 text-center text-blue-900">AP Practice Questions</h1>
-            <p className="text-center text-blue-950 mb-8">Get access to questions created by ChatGPT's o3 model, <b>for free.</b></p>
+        <section
+            className="
+        animated-gradient
+        min-h-screen
+        flex flex-col items-center justify-center
+        text-gray-100
+        px-4 sm:px-6
+      "
+        >
+            <div className="max-w-5xl w-full mt-10 p-8 bg-pastelBlue rounded-xl shadow-lg">
+                <h1 className="text-3xl font-bold mb-2 text-center text-blue-900">
+                    AP Practice Questions
+                </h1>
+                <p className="text-center text-blue-950 mb-8">
+                    Get access to questions created by ChatGPT's o3 model, <b>for free.</b>
+                </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {subjects.map((subject) => (
-                    <button
-                        key={subject.id}
-                        onClick={() => onSelectSubject(subject.name)}
-                        className={`relative p-5 ${subject.color} text-white rounded-lg shadow-md 
-                                   hover:${subject.hoverColor} transform hover:-translate-y-1 transition-all duration-200
-                                   focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-blue-300`}
-                    >
-                        <div className="flex flex-col items-center justify-center">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {subjects.map((subject) => (
+                        <button
+                            key={subject.id}
+                            onClick={() => onSelectSubject(subject.id)}
+                            className={`
+                relative p-5 ${subject.color} text-white rounded-lg shadow-md
+                hover:${subject.hoverColor} transform hover:-translate-y-1
+                transition-all duration-200
+                focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-blue-300
+              `}
+                        >
                             <span className="text-lg font-semibold">{subject.name}</span>
-                        </div>
-                        <div className="absolute inset-x-0 bottom-0 h-1 bg-white bg-opacity-30 rounded-b"></div>
-                    </button>
-                ))}
-            </div>
+                            <div className="absolute inset-x-0 bottom-0 h-1 bg-white bg-opacity-30 rounded-b" />
+                        </button>
+                    ))}
+                </div>
 
-            {/* "View Question History" Button - placed at the bottom */}
-            <div className="mt-8 flex justify-center">
-                <button
-                    onClick={onViewHistory}
-                    className="w-3/4 p-5 bg-gray-500 text-white rounded-lg shadow-md
-                               hover:bg-gray-600 transform hover:-translate-y-1 transition-all duration-200
-                               focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-gray-300"
-                >
-                    <span className="text-lg font-semibold">View Question History</span>
-                </button>
+                <div className="mt-8 flex justify-center">
+                    <button
+                        onClick={onViewHistory}
+                        className="
+              w-3/4 p-5 bg-gray-500 text-white rounded-lg shadow-md
+              hover:bg-gray-600 transform hover:-translate-y-1
+              transition-all duration-200
+              focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-gray-300
+            "
+                    >
+                        <span className="text-lg font-semibold">View Question History</span>
+                    </button>
+                </div>
             </div>
-        </div>
+        </section>
     );
 }
-
-export default MainMenu;
