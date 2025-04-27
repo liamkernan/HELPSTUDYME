@@ -1,3 +1,4 @@
+// src/App.js
 import React, { useState } from "react";
 import "./App.css";
 import "katex/dist/katex.min.css";
@@ -16,14 +17,14 @@ const API_BASE = process.env.REACT_APP_API_BASE;
 
 export default function App() {
     const [currentScreen, setCurrentScreen] = useState("landing");
-    const [activeSubject,   setActiveSubject]   = useState(null);
-    const [question,        setQuestion]        = useState("");
-    const [selectedAnswer,  setSelectedAnswer]  = useState(null);
-    const [correctAnswer,   setCorrectAnswer]   = useState(null);
-    const [loading,         setLoading]         = useState(false);
-    const [showFeedback,    setShowFeedback]    = useState(false);
-    const [answerSubmitted, setAnswerSubmitted] = useState(false);
-    const [feedbackData,    setFeedbackData]    = useState(null);
+    const [activeSubject,  setActiveSubject]  = useState(null);
+    const [question,       setQuestion]       = useState("");
+    const [selectedAnswer, setSelectedAnswer] = useState(null);
+    const [correctAnswer,  setCorrectAnswer]  = useState(null);
+    const [loading,        setLoading]        = useState(false);
+    const [showFeedback,   setShowFeedback]   = useState(false);
+    const [answerSubmitted,setAnswerSubmitted]= useState(false);
+    const [feedbackData,   setFeedbackData]   = useState(null);
 
     const fetchQuestion = async (subject, questionType) => {
         setLoading(true);
@@ -102,6 +103,7 @@ export default function App() {
         }
     };
 
+    /* navigation helpers */
     const goLanding       = () => setCurrentScreen("landing");
     const goAbout         = () => setCurrentScreen("about");
     const goSubjectSelect = () => setCurrentScreen("subject-select");
@@ -118,17 +120,15 @@ export default function App() {
                 />
             ) : currentScreen === "about" ? (
                 <About onBack={goLanding} />
+            ) : currentScreen === "subject-select" ? (
+                <MainMenu
+                    onSelectSubject={(subj) => { setActiveSubject(subj); goTypeSelect(); }}
+                    onViewHistory={goHistory}
+                />
             ) : (
                 <>
                     <Header />
                     <main className="flex-grow container mx-auto p-4">
-                        {currentScreen === "subject-select" && (
-                            <MainMenu
-                                onSelectSubject={(subj) => { setActiveSubject(subj); goTypeSelect(); }}
-                                onViewHistory={goHistory}
-                                onBack={goLanding}
-                            />
-                        )}
                         {currentScreen === "type-select" && (
                             <QuestionTypeSelector
                                 activeSubject={activeSubject}
