@@ -57,7 +57,7 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
                 </h1>
 
                 <p className="text-lg md:text-xl text-gray-300">
-                    Unlimited AI-generated practice questions, instant feedback, and progress
+                    Endless AI-generated practice questions, instant feedback, and progress
                     analytics&nbsp;&mdash; all in one streamlined tool built by a student,
                     for students. <b><i>Free forever.</i></b>
                 </p>
