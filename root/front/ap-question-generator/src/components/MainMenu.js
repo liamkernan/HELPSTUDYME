@@ -32,7 +32,7 @@ export default function MainMenu({ onSelectSubject, onViewHistory }) {
                     AP Practice Questions
                 </h1>
                 <p className="text-center text-blue-950 mb-8">
-                    Get access to questions created by ChatGPT's o3 model, <b>for free.</b>
+                    Get unlimited access to questions created by ChatGPT's o3 model, <b>for free.</b>
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
