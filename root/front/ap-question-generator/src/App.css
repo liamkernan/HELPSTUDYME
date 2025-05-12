@@ -23,7 +23,7 @@
     --gradient-start:   #3535ff;  /* vivid blue */
     --gradient-accent1: rgba(144, 74, 255, 0.61);  /* your button-primary */
     --gradient-mid: #22228e;  /* lavender-blue */
-    --gradient-accent2: #9faeff;  /* button-primary-hover */
+    --gradient-accent2: #8038cf;  /* button-primary-hover */
     --gradient-end: #007efb;  /* mint-blue */
 
     --text-primary:    #F8FAFC;
@@ -51,5 +51,5 @@
     /* bigger so you can pan more */
     background-size: 600% 600%;
     /* much snappier: 8s instead of 20s */
-    animation: gradientAnimation 8s ease infinite;
+    animation: gradientAnimation 15s ease infinite;
 }

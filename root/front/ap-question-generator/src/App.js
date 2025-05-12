@@ -13,6 +13,9 @@ import QuestionScreen       from "./components/QuestionScreen";
 import FreeResponseScreen   from "./components/FreeResponseScreen";
 import QuestionHistory      from "./components/QuestionHistory";
 
+import { AuthProvider } from "./AuthContext";
+import { logQuestion }  from "./history";
+
 const API_BASE = process.env.REACT_APP_API_BASE;
 
 export default function App() {
@@ -26,6 +29,7 @@ export default function App() {
     const [answerSubmitted,setAnswerSubmitted]= useState(false);
     const [feedbackData,   setFeedbackData]   = useState(null);
 
+    /* ───────────────────────────── fetch question ──────────────────────────── */
     const fetchQuestion = async (subject, questionType) => {
         setLoading(true);
         setActiveSubject(subject);
@@ -78,20 +82,42 @@ export default function App() {
         return { processedText: clean, correctAnswerLetter: "B" };
     };
 
+    /* ───────────────────────── submit answers & log ────────────────────────── */
     const handleSubmitAnswer = () => {
         setShowFeedback(true);
         setAnswerSubmitted(true);
+
+        // 🔹 save MCQ attempt to Firestore
+        logQuestion({
+            type:    "MCQ",
+            subject: activeSubject,
+            prompt:  question,
+            chosen:  selectedAnswer,
+            correct: correctAnswer,
+        });
     };
 
     const handleSubmitFreeResponse = async (responseText) => {
         try {
             const res = await fetch(`${API_BASE}/evaluate`, {
-                method: "POST",
+                method:  "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ subject: activeSubject, question, response: responseText }),
+                body:    JSON.stringify({ subject: activeSubject, question, response: responseText }),
             });
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            setFeedbackData(await res.json());
+
+            const evalData = await res.json();
+            setFeedbackData(evalData);
+
+            // 🔹 save FRQ attempt to Firestore
+            logQuestion({
+                type:     "FRQ",
+                subject:  activeSubject,
+                prompt:   question,
+                response: responseText,
+                feedback: evalData.feedback,
+                score:    evalData.score,
+            });
         } catch (err) {
             console.error("handleSubmitFreeResponse:", err);
             setFeedbackData({
@@ -103,72 +129,76 @@ export default function App() {
         }
     };
 
-    /* navigation helpers */
+    /* ──────────────────────────── navigation helpers ───────────────────────── */
     const goLanding       = () => setCurrentScreen("landing");
     const goAbout         = () => setCurrentScreen("about");
     const goSubjectSelect = () => setCurrentScreen("subject-select");
     const goTypeSelect    = () => setCurrentScreen("type-select");
     const goHistory       = () => setCurrentScreen("history");
 
+    /* ───────────────────────────────── render ──────────────────────────────── */
     return (
-        <div className="min-h-screen flex flex-col bg-blue-950">
-            {currentScreen === "landing" ? (
-                <LandingPage
-                    onGetStarted={goSubjectSelect}
-                    onViewHistory={goHistory}
-                    onAbout={goAbout}
-                />
-            ) : currentScreen === "about" ? (
-                <About onBack={goLanding} />
-            ) : currentScreen === "subject-select" ? (
-                <MainMenu
-                    onSelectSubject={(subj) => { setActiveSubject(subj); goTypeSelect(); }}
-                    onViewHistory={goHistory}
-                />
-            ) : (
-                <>
-                    <Header />
-                    <main className="flex-grow container mx-auto p-4">
-                        {currentScreen === "type-select" && (
-                            <QuestionTypeSelector
-                                activeSubject={activeSubject}
-                                onSelectType={(type) => fetchQuestion(activeSubject, type)}
-                                onBack={goSubjectSelect}
-                            />
-                        )}
-                        {currentScreen === "question" && (
-                            <QuestionScreen
-                                question={question}
-                                loading={loading}
-                                activeSubject={activeSubject}
-                                selectedAnswer={selectedAnswer}
-                                setSelectedAnswer={setSelectedAnswer}
-                                correctAnswer={correctAnswer}
-                                showFeedback={showFeedback}
-                                answerSubmitted={answerSubmitted}
-                                onSubmitAnswer={handleSubmitAnswer}
-                                onNewQuestion={() => fetchQuestion(activeSubject, "multiple-choice")}
-                                onBackToMenu={goSubjectSelect}
-                            />
-                        )}
-                        {currentScreen === "free-response" && (
-                            <FreeResponseScreen
-                                question={question}
-                                loading={loading}
-                                activeSubject={activeSubject}
-                                onSubmitResponse={handleSubmitFreeResponse}
-                                onNewQuestion={() => fetchQuestion(activeSubject, "free-response")}
-                                onBackToMenu={goSubjectSelect}
-                                feedbackData={feedbackData}
-                            />
-                        )}
-                        {currentScreen === "history" && (
-                            <QuestionHistory onBackToMenu={goSubjectSelect} />
-                        )}
-                    </main>
-                    <Footer />
-                </>
-            )}
-        </div>
+        <AuthProvider>
+            <div className="min-h-screen flex flex-col bg-blue-950">
+                {currentScreen === "landing" ? (
+                    <LandingPage
+                        onGetStarted={goSubjectSelect}
+                        onViewHistory={goHistory}
+                        onAbout={goAbout}
+                    />
+                ) : currentScreen === "about" ? (
+                    <About onBack={goLanding} />
+                ) : currentScreen === "subject-select" ? (
+                    <MainMenu
+                        onSelectSubject={(subj) => { setActiveSubject(subj); goTypeSelect(); }}
+                        onBack={goLanding}
+                        onViewHistory={goHistory}
+                    />
+                ) : (
+                    <>
+                        <Header />
+                        <main className="flex-grow container mx-auto p-4">
+                            {currentScreen === "type-select" && (
+                                <QuestionTypeSelector
+                                    activeSubject={activeSubject}
+                                    onSelectType={(type) => fetchQuestion(activeSubject, type)}
+                                    onBack={goSubjectSelect}
+                                />
+                            )}
+                            {currentScreen === "question" && (
+                                <QuestionScreen
+                                    question={question}
+                                    loading={loading}
+                                    activeSubject={activeSubject}
+                                    selectedAnswer={selectedAnswer}
+                                    setSelectedAnswer={setSelectedAnswer}
+                                    correctAnswer={correctAnswer}
+                                    showFeedback={showFeedback}
+                                    answerSubmitted={answerSubmitted}
+                                    onSubmitAnswer={handleSubmitAnswer}
+                                    onNewQuestion={() => fetchQuestion(activeSubject, "multiple-choice")}
+                                    onBackToMenu={goSubjectSelect}
+                                />
+                            )}
+                            {currentScreen === "free-response" && (
+                                <FreeResponseScreen
+                                    question={question}
+                                    loading={loading}
+                                    activeSubject={activeSubject}
+                                    onSubmitResponse={handleSubmitFreeResponse}
+                                    onNewQuestion={() => fetchQuestion(activeSubject, "free-response")}
+                                    onBackToMenu={goSubjectSelect}
+                                    feedbackData={feedbackData}
+                                />
+                            )}
+                            {currentScreen === "history" && (
+                                <QuestionHistory onBackToMenu={goSubjectSelect} />
+                            )}
+                        </main>
+                        <Footer />
+                    </>
+                )}
+            </div>
+        </AuthProvider>
     );
 }

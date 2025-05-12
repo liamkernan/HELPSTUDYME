@@ -15,7 +15,6 @@ public class OpenAIService {
     private final SimpleOpenAI openAI;
     private final ObjectMapper objectMapper;
 
-    // Initialize OpenAI client
     public OpenAIService() {
         this.openAI = SimpleOpenAI.builder()
                 .apiKey(System.getenv("OPENAI_API_KEY"))
@@ -24,7 +23,6 @@ public class OpenAIService {
         this.objectMapper = new ObjectMapper();
     }
 
-    // Generate AP-level practice questions
     public String generateQuestion(String prompt, String type) {
         int creditdiff;
         String model;
@@ -36,7 +34,7 @@ public class OpenAIService {
                 creditdiff = 4000;
                 model = "gpt-4.1";
             } else {
-                systemPrompt = "You are an expert on all AP classes. Create challenging and full length multiple choice questions. Only provide the question and 4 multiple choice options, and the choices should be marked with the letters A B C D accordingly. Mark the correct multiple choice option with *** after its letter. No extra text or explanations.";
+                systemPrompt = "You are an expert on all AP classes. Create challenging and full length multiple choice questions. Only provide the question and 4 multiple choice options, and the choices should be marked with the letters A B C D accordingly. Mark the correct multiple choice option with *** after its letter. If the subject is math or physics related, make sure to format for KaTEK. If the subject is EuroHistory, HumanGeo, Lit, or UsHistory always provide full text excerpts and in-depth questions. If the subject is CompSci only provide code-example questions in Java, no terms. No extra text or explanations.";
                 creditdiff = 2000;
                 model = "gpt-4.1-mini";
             }
