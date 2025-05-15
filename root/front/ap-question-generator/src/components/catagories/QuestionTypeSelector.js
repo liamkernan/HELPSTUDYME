@@ -11,7 +11,6 @@ function QuestionTypeSelector({ onSelectType, onBack, activeSubject }) {
     return (
 
         <div className="max-w-3xl mx-auto mt-10 p-8 bg-white rounded-xl shadow-lg relative">
-            {/* Back Button positioned at top right */}
             <button
                 onClick={onBack}
                 className="absolute top-4 right-4 px-4 py-2 bg-gray-300 text-gray-800 rounded-lg shadow hover:bg-gray-400 transition duration-200"
@@ -19,7 +18,7 @@ function QuestionTypeSelector({ onSelectType, onBack, activeSubject }) {
                 Back to Menu
             </button>
 
-            <h2 className="text-2xl font-bold mb-2 text-left">
+            <h2 className="text-3xl font-bold mb-2 text-left">
                 {formatSubjectName(activeSubject)}
             </h2>
             <p className="text-left text-gray-600 mb-8">Select question type</p>
