@@ -1,8 +1,8 @@
 import React from "react";
-import { useAuth } from "../AuthContext";
+import { useAuth } from "../../AuthContext";
 import { ArrowLeft } from "lucide-react";
 
-export default function MainMenu({ onSelectSubject, onViewHistory, onBack }) {
+export default function ApSelector({ onSelectSubject, onViewHistory, onBack }) {
     const subjects = [
         { id: "calcAB",     name: "Calculus AB 📐",        color: "bg-blue-500",   hoverColor: "bg-blue-600" },
         { id: "calcBC",     name: "Calculus BC 📏",        color: "bg-blue-500",   hoverColor: "bg-blue-600" },
@@ -21,7 +21,7 @@ export default function MainMenu({ onSelectSubject, onViewHistory, onBack }) {
     const { user, signIn, signOut, loading } = useAuth();
 
     return (
-        <section className="relative animated-gradient min-h-screen flex flex-col items-center justify-center text-gray-100 px-4 sm:px-6">
+        <section className="relative animated-gradient-blue min-h-screen flex flex-col items-center justify-center text-gray-100 px-4 sm:px-6">
             <div className="absolute top-4 left-4">
                 <button
                     onClick={onBack}
@@ -67,7 +67,7 @@ export default function MainMenu({ onSelectSubject, onViewHistory, onBack }) {
                     {subjects.map((subj) => (
                         <button
                             key={subj.id}
-                            onClick={() => onSelectSubject(subj.id)}
+                            onClick={() => onSelectSubject(subj.name)}
                             className={`
                 relative p-6 ${subj.color} text-white rounded-2xl shadow-lg
                 hover:${subj.hoverColor} transform hover:-translate-y-1

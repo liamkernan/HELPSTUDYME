@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState } from "react";
 import "./App.css";
 import "katex/dist/katex.min.css";
@@ -7,14 +6,19 @@ import Header               from "./components/Header";
 import Footer               from "./components/Footer";
 import LandingPage          from "./components/LandingPage";
 import About                from "./components/About";
-import MainMenu             from "./components/MainMenu";
-import QuestionTypeSelector from "./components/QuestionTypeSelector";
+import ApSelector             from "./components/catagories/ApSelector";
+import QuestionTypeSelector from "./components/catagories/QuestionTypeSelector";
 import QuestionScreen       from "./components/QuestionScreen";
 import FreeResponseScreen   from "./components/FreeResponseScreen";
 import QuestionHistory      from "./components/QuestionHistory";
 
 import { AuthProvider } from "./AuthContext";
 import { logQuestion }  from "./history";
+
+import ModeSelector from "./components/catagories/ModeSelector";
+import SatSelector from "./components/catagories/SatSelector";
+import ActSelector from "./components/catagories/ActSelector";
+import StudyAnything from "./components/catagories/StudyAnything";
 
 const API_BASE = process.env.REACT_APP_API_BASE;
 
@@ -29,7 +33,18 @@ export default function App() {
     const [answerSubmitted,setAnswerSubmitted]= useState(false);
     const [feedbackData,   setFeedbackData]   = useState(null);
 
-    /* ───────────────────────────── fetch question ──────────────────────────── */
+    // Navigation handlers
+    const goLanding       = () => setCurrentScreen("landing");
+    const goAbout         = () => setCurrentScreen("about");
+    const goSubjectSelect = () => setCurrentScreen("subject-select");
+    const goTypeSelect    = () => setCurrentScreen("type-select");
+    const goHistory       = () => setCurrentScreen("history");
+    const goSelect        = () => setCurrentScreen("select");
+    const goYOURS         = () => setCurrentScreen("yours");
+    const goSAT           = () => setCurrentScreen("sat");
+    const goACT           = () => setCurrentScreen("act");
+    const goQuestion           = () => setCurrentScreen("question");
+
     const fetchQuestion = async (subject, questionType) => {
         setLoading(true);
         setActiveSubject(subject);
@@ -82,12 +97,10 @@ export default function App() {
         return { processedText: clean, correctAnswerLetter: "B" };
     };
 
-    /* ───────────────────────── submit answers & log ────────────────────────── */
     const handleSubmitAnswer = () => {
         setShowFeedback(true);
         setAnswerSubmitted(true);
 
-        // 🔹 save MCQ attempt to Firestore
         logQuestion({
             type:    "MCQ",
             subject: activeSubject,
@@ -109,7 +122,6 @@ export default function App() {
             const evalData = await res.json();
             setFeedbackData(evalData);
 
-            // 🔹 save FRQ attempt to Firestore
             logQuestion({
                 type:     "FRQ",
                 subject:  activeSubject,
@@ -129,34 +141,63 @@ export default function App() {
         }
     };
 
-    /* ──────────────────────────── navigation helpers ───────────────────────── */
-    const goLanding       = () => setCurrentScreen("landing");
-    const goAbout         = () => setCurrentScreen("about");
-    const goSubjectSelect = () => setCurrentScreen("subject-select");
-    const goTypeSelect    = () => setCurrentScreen("type-select");
-    const goHistory       = () => setCurrentScreen("history");
-
-    /* ───────────────────────────────── render ──────────────────────────────── */
     return (
         <AuthProvider>
             <div className="min-h-screen flex flex-col bg-blue-950">
-                {currentScreen === "landing" ? (
+                {currentScreen === "landing" && (
                     <LandingPage
-                        onGetStarted={goSubjectSelect}
+                        onGetStarted={goSelect}
                         onViewHistory={goHistory}
                         onAbout={goAbout}
                     />
-                ) : currentScreen === "about" ? (
-                    <About onBack={goLanding} />
-                ) : currentScreen === "subject-select" ? (
-                    <MainMenu
-                        onSelectSubject={(subj) => { setActiveSubject(subj); goTypeSelect(); }}
+                )}
+
+                {currentScreen === "select" && (
+                    <ModeSelector
+                        onAP={goSubjectSelect}
+                        onSAT={goSAT}
+                        onACT={goACT}
+                        onYOURS={goYOURS}
                         onBack={goLanding}
+                    />
+                )}
+
+                {currentScreen === "about" && <About onBack={goLanding} />}
+                {currentScreen === "sat"   && (
+                    <SatSelector onBack={goSelect}
+                                 onSelectSubject={(subj) =>
+                                     fetchQuestion("SAT " + subj, "multiple-choice")  // ← fetch _and_ navigate
+                                 }
+                                 onViewHistory={goHistory}
+                    />
+
+                )}
+                {currentScreen === "act"   && (
+                    <ActSelector onBack={goSelect}
+                                 onSelectSubject={(subj) =>
+                                     fetchQuestion("ACT " + subj, "multiple-choice")  // ← fetch _and_ navigate
+                                 }
+                                 onViewHistory={goHistory}
+                    />
+
+                )}
+                {currentScreen === "yours" && (
+                    <StudyAnything onBack={goSelect}
+                                   onViewHistory={goHistory}
+                    />
+
+                )}
+                {currentScreen === "subject-select" && (
+                    <ApSelector
+                        onSelectSubject={(subj) => { setActiveSubject(subj); goTypeSelect(); }}
+                        onBack={goSelect}
                         onViewHistory={goHistory}
                     />
-                ) : (
+                )}
+
+                {(currentScreen === "type-select" || currentScreen === "question" || currentScreen === "free-response" || currentScreen === "history") && (
                     <>
-                        <Header />
+                        <Header onBack={goLanding} />
                         <main className="flex-grow container mx-auto p-4">
                             {currentScreen === "type-select" && (
                                 <QuestionTypeSelector
@@ -165,6 +206,7 @@ export default function App() {
                                     onBack={goSubjectSelect}
                                 />
                             )}
+
                             {currentScreen === "question" && (
                                 <QuestionScreen
                                     question={question}
@@ -177,9 +219,10 @@ export default function App() {
                                     answerSubmitted={answerSubmitted}
                                     onSubmitAnswer={handleSubmitAnswer}
                                     onNewQuestion={() => fetchQuestion(activeSubject, "multiple-choice")}
-                                    onBackToMenu={goSubjectSelect}
+                                    onBackToMenu={goSelect}
                                 />
                             )}
+
                             {currentScreen === "free-response" && (
                                 <FreeResponseScreen
                                     question={question}
@@ -191,8 +234,9 @@ export default function App() {
                                     feedbackData={feedbackData}
                                 />
                             )}
+
                             {currentScreen === "history" && (
-                                <QuestionHistory onBackToMenu={goSubjectSelect} />
+                                <QuestionHistory onBackToMenu={goSelect} />
                             )}
                         </main>
                         <Footer />

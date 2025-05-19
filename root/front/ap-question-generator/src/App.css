@@ -31,25 +31,76 @@
 }
 
 /* ▷ Faster, richer gradient animation */
+/* Shared animation */
 @keyframes gradientAnimation {
-    0%   { background-position:   0% 50%; }
-    25%  { background-position:  50% 50%; }
+    0%   { background-position: 0% 50%; }
+    25%  { background-position: 50% 50%; }
     50%  { background-position: 100% 50%; }
-    75%  { background-position:  50% 50%; }
-    100% { background-position:   0% 50%; }
+    75%  { background-position: 50% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .animated-gradient {
     background: linear-gradient(
             135deg,
-            var(--gradient-start),
-            var(--gradient-accent1),
-            var(--gradient-mid),
-            var(--gradient-accent2),
-            var(--gradient-end)
+            #3535ff,
+            rgba(144, 74, 255, 0.61),
+            #22228e,
+            #8038cf,
+            #007efb
     );
-    /* bigger so you can pan more */
     background-size: 600% 600%;
-    /* much snappier: 8s instead of 20s */
+    animation: gradientAnimation 15s ease infinite;
+}
+
+.animated-gradient-blue {
+    background: linear-gradient(
+            135deg,
+            #3535ff,
+            rgba(45, 71, 250, 0.61),
+            #22418e,
+            #a25eec,
+            #007efb
+    );
+    background-size: 600% 600%;
+    animation: gradientAnimation 15s ease infinite;
+}
+
+.animated-gradient-red {
+    background: linear-gradient(
+            135deg,
+            #ff3d3d,
+            #ff6262,
+            #ff3c4d,
+            #ffa897,
+            #e1497d
+    );
+    background-size: 600% 600%;
+    animation: gradientAnimation 15s ease infinite;
+}
+
+.animated-gradient-green {
+    background: linear-gradient(
+            135deg,
+            #72ff68,
+            #3ad181,
+            #6df178,
+            #5cec5e,
+            #7aef81
+    );
+    background-size: 600% 600%;
+    animation: gradientAnimation 15s ease infinite;
+}
+
+.animated-gradient-all {
+    background: linear-gradient(
+            135deg,
+            #ff3d3d,
+            #ff6a00,
+            #cc2936,
+            #ff5733,
+            #e91e63
+    );
+    background-size: 600% 600%;
     animation: gradientAnimation 15s ease infinite;
 }
