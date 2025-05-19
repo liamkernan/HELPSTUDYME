@@ -1,26 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { fetchHistory } from "../history";
+import renderMathInElement from "katex/contrib/auto-render";
+import "katex/dist/katex.min.css";
+
+const parsePrompt = (raw = "", correctLetter = null) => {
+    const rawLines = raw
+        .split(/\r?\n/)
+        .map((l) => l.trim())
+        .filter((l) => l.length);
+
+    let correctIndex = rawLines.findIndex((l) => l.includes("***"));
+    const lines = rawLines.map((l) => l.replace(/\*\*\*/g, "").trim());
+
+    if (correctIndex === -1 && correctLetter) {
+        correctIndex = lines.findIndex((l) => l.startsWith(correctLetter));
+    }
+    return { lines, correctIndex };
+};
 
 function QuestionHistory({ onBackToMenu }) {
     const [questions, setQuestions] = useState([]);
-    const [loading,   setLoading]   = useState(true);
-    const [error,     setError]     = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const parsePrompt = (raw = "", correctLetter = null) => {
-        const rawLines = raw
-            .split(/\r?\n/)
-            .map((l) => l.trim())
-            .filter((l) => l.length);
-
-        let correctIndex = rawLines.findIndex((l) => l.includes("***"));
-        const lines = rawLines.map((l) => l.replace(/\*\*\*/g, "").trim());
-
-        if (correctIndex === -1 && correctLetter) {
-            correctIndex = lines.findIndex((l) => l.startsWith(correctLetter));
-        }
-        return { lines, correctIndex };
-    };
-
+    // Fetch history once on mount
     useEffect(() => {
         fetchHistory()
             .then((data) => {
@@ -37,16 +40,36 @@ function QuestionHistory({ onBackToMenu }) {
             .finally(() => setLoading(false));
     }, []);
 
-    if (loading) return <div className="p-6"><p>Loading...</p></div>;
-    if (error)   return <div className="p-6"><p>Error: {error}</p></div>;
+    useEffect(() => {
+        if (!loading) {
+            // Delay to ensure the DOM has updated
+            const timer = setTimeout(() => {
+                const el = document.getElementById("history-container");
+                if (el) {
+                    renderMathInElement(el, {
+                        delimiters: [
+                            { left: "$$", right: "$$", display: true },
+                            { left: "$", right: "$", display: false },
+                            { left: "\\(", right: "\\)", display: false },
+                            { left: "\\[", right: "\\]", display: true },
+                        ],
+                    });
+                }
+            }, 0);
+            return () => clearTimeout(timer);
+        }
+    }, [loading, questions]);
+
+    if (loading) return <div className="p-6 text-white"><p>Loading...</p></div>;
+    if (error) return <div className="p-6"><p>Error: {error}</p></div>;
 
     return (
-        <div className="p-6">
+        <div id="history-container" className="p-6">
             <div className="flex items-center justify-between mb-4">
                 <div>
                     <h1 className="text-3xl font-bold text-white">Question History</h1>
                     <p className="text-sm italic text-gray-300 mt-1">
-                        Below you can find a full list of your Multiple Choice and Free-Response questions. Correct choices are highlighted.
+                        Below you can find a full list of your Multiple Choice and Free‑Response questions. Correct choices are highlighted.
                     </p>
                 </div>
                 <button
@@ -58,7 +81,7 @@ function QuestionHistory({ onBackToMenu }) {
             </div>
 
             {questions.length === 0 ? (
-                <p className="text-white">No questions found.</p>
+                <p className="text-white text-2xl">sign in, or start studying ;)</p>
             ) : (
                 <ul className="space-y-3">
                     {questions.map((q, idx) => (

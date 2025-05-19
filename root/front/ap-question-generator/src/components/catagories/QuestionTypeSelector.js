@@ -18,10 +18,10 @@ function QuestionTypeSelector({ onSelectType, onBack, activeSubject }) {
                 Back to Menu
             </button>
 
-            <h2 className="text-3xl font-bold mb-2 text-left">
+            <h2 className="text-3xl font-bold mb-2 text-left text-blue-900">
                 {formatSubjectName(activeSubject)}
             </h2>
-            <p className="text-left text-gray-600 mb-8">Select question type</p>
+            <p className="text-left text-black mb-8">Select question type</p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl mx-auto">
                 <button

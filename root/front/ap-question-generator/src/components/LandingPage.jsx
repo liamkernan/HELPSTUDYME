@@ -110,7 +110,7 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
 
                     <button
                         onClick={onAbout}
-                        className="px-6 py-3 bg-pastelBlue hover:bg-white/20 rounded-2xl font-semibold transition"
+                        className="px-6 py-3 bg-blue-800 hover:bg-white/20 rounded-2xl font-semibold transition"
                     >
                         About this Project
                     </button>
@@ -118,14 +118,7 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
             </div>
 
             <footer className="mt-12 text-center text-sm text-gray-400">
-                © {new Date().getFullYear()} helpstudy.me • Built with{" "}
-                <a href="https://react.dev" className="underline hover:text-gray-200" target="_blank" rel="noopener noreferrer">
-                    React
-                </a>{" "}
-                &amp;{" "}
-                <a href="https://katex.org" className="underline hover:text-gray-200" target="_blank" rel="noopener noreferrer">
-                    KaTeX
-                </a>
+                © {new Date().getFullYear()} helpstudy.me • Built by Liam Kernan
             </footer>
         </section>
     );
