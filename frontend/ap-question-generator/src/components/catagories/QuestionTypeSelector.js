@@ -27,7 +27,7 @@ function QuestionTypeSelector({ onSelectType, onBack, activeSubject }) {
                 <button
                     onClick={() => onSelectType("multiple-choice")}
                     className="flex flex-col justify-center items-center h-56 p-8
-                               bg-blue-500 text-white rounded-lg shadow-md
+                               animated-gradient-blue text-white rounded-lg shadow-md
                                hover:bg-blue-600 transform hover:-translate-y-1
                                transition-all duration-200"
                 >
@@ -40,7 +40,7 @@ function QuestionTypeSelector({ onSelectType, onBack, activeSubject }) {
                 <button
                     onClick={() => onSelectType("free-response")}
                     className="flex flex-col justify-center items-center h-56 p-8
-                               bg-green-500 text-white rounded-lg shadow-md
+                               animated-gradient-green text-white rounded-lg shadow-md
                                hover:bg-green-600 transform hover:-translate-y-1
                                transition-all duration-200"
                 >

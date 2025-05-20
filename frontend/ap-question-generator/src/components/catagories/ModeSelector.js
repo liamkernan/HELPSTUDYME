@@ -36,7 +36,7 @@ export default function ModeSelector({ onAP, onSAT, onACT, onYOURS, onBack }) {
             label: "Study Anything",
             onClick: onYOURS,
             icon: Sparkles,
-            bg: "bg-yellow-500",
+            bg: "animated-gradient-all",
         },
     ];
 

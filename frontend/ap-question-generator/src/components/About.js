@@ -3,7 +3,7 @@ import {ArrowLeft} from "lucide-react";
 
 export default function About({ onBack }) {
     return (
-        <div className="pt-44 min-h-screen flex flex-col bg-blue-950 text-gray-100">
+        <div className="animated-gradient pt-44 min-h-screen flex flex-col bg-blue-950 text-gray-100">
             <div className="container mx-auto p-6">
                 <div className="absolute top-4 left-4">
                     <button
@@ -30,6 +30,14 @@ export default function About({ onBack }) {
                     Created by Liam Kernan as a portfolio piece and a way to help fellow
                     students study not just <b>harder</b>, but <b>smarter</b>.
                 </p>
+                <a
+                    href="https://github.com/liamkernan/HELPSTUDYME"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-gray-200"
+                >
+                    GitHub Repository
+                </a>
             </div>
         </div>
     );
