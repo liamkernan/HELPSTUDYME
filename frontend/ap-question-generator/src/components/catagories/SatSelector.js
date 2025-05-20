@@ -4,14 +4,14 @@ import { ArrowLeft } from "lucide-react";
 
 export default function SatSelectorx({ onSelectSubject, onViewHistory, onBack }) {
     const subjects = [
-        { id: "craftstructure",     name: "English: Craft and Structure",        color: "bg-blue-500",   hoverColor: "bg-blue-600" },
-        { id: "information",     name: "English: Information and Ideas",        color: "bg-blue-500",   hoverColor: "bg-blue-600" },
-        { id: "englishconventions",      name: "English: Standard English Conventions",         color: "bg-blue-500",  hoverColor: "bg-blue-600" },
-        { id: "expression",        name: "English: Expression of Ideas (notes)",            color: "bg-blue-500",  hoverColor: "bg-blue-600" },
-        { id: "algebra",   name: "Math: Algebra",         color: "bg-red-500", hoverColor: "bg-red-600" },
-        { id: "advanced",  name: "Math: Advanced & Quadratics",         color: "bg-red-500",    hoverColor: "bg-red-600" },
-        { id: "data",       name: "Math: Data Analysis",          color: "bg-red-500", hoverColor: "bg-red-600" },
-        { id: "geometery",name: "Math: Geometery & Trigonometry",   color: "bg-red-500",    hoverColor: "bg-red-600" },
+        { id: "craftstructure",     name: "English: Craft and Structure",        color: "bg-cyan-500",   hoverColor: "bg-teal-600" },
+        { id: "information",     name: "English: Information and Ideas",        color: "bg-cyan-500",   hoverColor: "bg-teal-600" },
+        { id: "englishconventions",      name: "English: Standard English Conventions",         color: "bg-cyan-500",  hoverColor: "bg-teal-600" },
+        { id: "expression",        name: "English: Expression of Ideas (notes)",            color: "bg-cyan-500",  hoverColor: "bg-teal-600" },
+        { id: "algebra",   name: "Math: Algebra",         color: "bg-green-500", hoverColor: "bg-pink-600" },
+        { id: "advanced",  name: "Math: Advanced & Quadratics",         color: "bg-green-500",    hoverColor: "bg-pink-600" },
+        { id: "data",       name: "Math: Data Analysis",          color: "bg-green-500", hoverColor: "bg-pink-600" },
+        { id: "geometery",name: "Math: Geometery & Trigonometry",   color: "bg-green-500",    hoverColor: "bg-pink-600" },
     ];
 
     const { user, signIn, signOut, loading } = useAuth();

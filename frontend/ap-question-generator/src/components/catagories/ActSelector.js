@@ -4,10 +4,10 @@ import { ArrowLeft } from "lucide-react";
 
 export default function ActSelector({ onSelectSubject, onViewHistory, onBack }) {
     const subjects = [
-        { id: "englisha",     name: "English: Grammar & Usage",        color: "bg-blue-500",   hoverColor: "bg-blue-600" },
-        { id: "englishb",     name: "English: Structure & Rhetorical Skills",        color: "bg-blue-500",   hoverColor: "bg-blue-600" },
-        { id: "matha",     name: "Math: Pre-Algebra & Algebra",        color: "bg-red-500",   hoverColor: "bg-red-600" },
-        { id: "mathb",     name: "Math: Geometery & Trigonometry",        color: "bg-red-500",   hoverColor: "bg-red-600" },
+        { id: "englisha",     name: "English: Grammar & Usage",        color: "bg-indigo-500",   hoverColor: "bg-blue-600" },
+        { id: "englishb",     name: "English: Structure & Rhetorical Skills",        color: "bg-indigo-500",   hoverColor: "bg-blue-600" },
+        { id: "matha",     name: "Math: Pre-Algebra & Algebra",        color: "bg-pink-600",   hoverColor: "bg-red-600" },
+        { id: "mathb",     name: "Math: Geometery & Trigonometry",        color: "bg-pink-600",   hoverColor: "bg-red-600" },
         { id: "readinga",     name: "Reading: Fiction & Social Science",        color: "bg-yellow-500",   hoverColor: "bg-yellow-600" },
         { id: "readingb",     name: "Reading: Humanities & Natural Science",        color: "bg-yellow-500",   hoverColor: "bg-yellow-600" },
         { id: "sciencea",     name: "Science: Data Representation",        color: "bg-green-500",   hoverColor: "bg-green-600" },

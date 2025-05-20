@@ -6,11 +6,11 @@ import { useAuth } from "../AuthContext";
 export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
     const words  = ["AP Exams", "SATs", "ACTs", "midterms", "finals", "quizzes"];
     const colors = [
+        "text-indigo-400",
+        "text-pink-400",
         "text-teal-400",
         "text-yellow-400",
-        "text-pink-400",
         "text-green-400",
-        "text-indigo-400",
         "text-red-400",
     ];
 
@@ -94,7 +94,7 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
                 <div className="flex flex-col sm:flex-row flex-wrap gap-4 justify-center">
                     <button
                         onClick={onGetStarted}
-                        className="px-6 py-3 bg-teal-500 hover:bg-teal-600 rounded-2xl font-semibold transition"
+                        className="px-6 py-3 bg-teal-500 hover:bg-green-500 rounded-2xl font-semibold transition"
                     >
                         Get Started
                     </button>
@@ -110,7 +110,7 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
 
                     <button
                         onClick={onAbout}
-                        className="px-6 py-3 bg-blue-800 hover:bg-white/20 rounded-2xl font-semibold transition"
+                        className="px-6 py-3  bg-pink-600/35 hover:bg-pink-500/70 rounded-2xl font-semibold transition"
                     >
                         About this Project
                     </button>

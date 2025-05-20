@@ -95,11 +95,11 @@
 .animated-gradient-all {
     background: linear-gradient(
             135deg,
-            #ff3d3d,
-            #ff6a00,
-            #cc2936,
-            #ff5733,
-            #e91e63
+            #ff0c0c,
+            #18c1ff,
+            #ffb729,
+            #e115ff,
+            #ff0b27
     );
     background-size: 600% 600%;
     animation: gradientAnimation 15s ease infinite;

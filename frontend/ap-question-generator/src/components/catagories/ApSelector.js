@@ -8,13 +8,13 @@ export default function ApSelector({ onSelectSubject, onViewHistory, onBack }) {
         { id: "calcBC",     name: "Calculus BC 📏",        color: "bg-blue-500",   hoverColor: "bg-blue-600" },
         { id: "stats",      name: "Statistics 📊",         color: "bg-green-500",  hoverColor: "bg-green-600" },
         { id: "bio",        name: "Biology 🧬",            color: "bg-green-500",  hoverColor: "bg-green-600" },
+        { id: "chem",       name: "Chemistry 🧪",          color: "bg-yellow-500", hoverColor: "bg-yellow-600" },
         { id: "physicsC",   name: "Physics C ⚛️",         color: "bg-purple-500", hoverColor: "bg-purple-600" },
         { id: "usHistory",  name: "US History 🗽",         color: "bg-red-500",    hoverColor: "bg-red-600" },
-        { id: "chem",       name: "Chemistry 🧪",          color: "bg-yellow-500", hoverColor: "bg-yellow-600" },
         { id: "euroHistory",name: "European History 🏰",   color: "bg-red-500",    hoverColor: "bg-red-600" },
+        { id: "humanGeo",   name: "Human Geography 🌍",    color: "bg-teal-500",   hoverColor: "bg-teal-600" },
         { id: "psych",      name: "Psychology 🧠",         color: "bg-pink-500",   hoverColor: "bg-pink-600" },
         { id: "compSci",    name: "Computer Science A 💻", color: "bg-indigo-500", hoverColor: "bg-indigo-600" },
-        { id: "humanGeo",   name: "Human Geography 🌍",    color: "bg-teal-500",   hoverColor: "bg-teal-600" },
         { id: "lit",        name: "Literature 📚",         color: "bg-amber-500",  hoverColor: "bg-amber-600" },
     ];
 
