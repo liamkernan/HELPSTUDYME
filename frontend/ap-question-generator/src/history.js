@@ -3,7 +3,7 @@ import { collection, addDoc, getDocs, serverTimestamp } from "firebase/firestore
 
 export async function logQuestion(qObj) {
     const uid = auth.currentUser?.uid;
-    if (!uid) return;                           // not signed in -> skip
+    if (!uid) return;
     const col = collection(db, "users", uid, "history");
     await addDoc(col, { ...qObj, createdAt: serverTimestamp() });
 }

@@ -56,7 +56,7 @@ export default function SatSelectorx({ onSelectSubject, onViewHistory, onBack })
                     SAT Practice Questions
                 </h1>
                 <p className="text-center text-blue-950 mb-8">
-                    Unlimited AI-generated questions and instant feedback—<b>free forever.</b>
+                    Unlimited AI-generated questions—<b>free forever.</b>
                 </p>
 
                 <div className="flex flex-col items-center space-y-4">
