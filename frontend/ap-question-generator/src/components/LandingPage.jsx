@@ -5,7 +5,7 @@ import { useAuth } from "../AuthContext";
 export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
     const words  = ["AP Exams", "SATs", "ACTs", "midterms", "finals", "quizzes"];
     const colors = [
-        "text-indigo-400",
+        "text-indigo-300",
         "text-pink-400",
         "text-teal-400",
         "text-yellow-400",
