@@ -28,7 +28,7 @@
         <dependency>
             <groupId>io.github.sashirestela</groupId>
             <artifactId>simple-openai</artifactId>
-            <version>3.19.3</version>
+            <version>3.20.0</version>
         </dependency>
 
         <dependency>
