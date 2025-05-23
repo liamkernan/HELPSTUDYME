@@ -230,7 +230,7 @@ export default function App() {
                         />
                     )}
 
-                )
+
                 {currentScreen === "subject-select" && (
                     <ApSelector
                         onSelectSubject={(subj) => { setActiveSubject(subj); goTypeSelect(); }}
