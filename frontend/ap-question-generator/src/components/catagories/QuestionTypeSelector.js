@@ -1,4 +1,5 @@
 import React from "react";
+import {ArrowLeft} from "lucide-react";
 
 function QuestionTypeSelector({ onSelectType, onBack, activeSubject }) {
     const formatSubjectName = (subject) => {
@@ -11,11 +12,14 @@ function QuestionTypeSelector({ onSelectType, onBack, activeSubject }) {
     return (
 
         <div className="max-w-3xl mx-auto mt-10 p-8 bg-white rounded-xl shadow-lg relative">
+
+
             <button
                 onClick={onBack}
-                className="absolute top-4 right-4 px-4 py-2 bg-gray-300 text-gray-800 rounded-lg shadow hover:bg-gray-400 transition duration-200"
+                className="absolute top-8 right-8 px-6 py-3 bg-gray-300 hover:bg-gray-500 text-white px-3 py-1 rounded-full shadow-lg backdrop-blur transition"
             >
-                Back to Menu
+
+                <span className="text-sm font-medium">Back to Menu</span>
             </button>
 
             <h2 className="text-3xl font-bold mb-2 text-left text-blue-900">

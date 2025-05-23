@@ -70,9 +70,10 @@ export default function QuestionScreen({
                 </h2>
                 <button
                     onClick={onBackToMenu}
-                    className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg"
+                    className="flex items-center space-x-2 bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-full shadow-lg backdrop-blur transition"
                 >
-                    Back to Menu
+
+                    <span className="text-sm font-medium">Back to Menu</span>
                 </button>
             </div>
 
