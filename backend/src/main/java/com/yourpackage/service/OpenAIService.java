@@ -1,5 +1,6 @@
 package com.yourpackage.service;
 
+import com.yourpackage.model.GuideEvaluation;
 import com.yourpackage.model.HistoryEvaluation;
 import io.github.sashirestela.cleverclient.client.OkHttpClientAdapter;
 import io.github.sashirestela.openai.SimpleOpenAI;
@@ -51,6 +52,35 @@ public class OpenAIService {
             var futureChat = openAI.chatCompletions().create(chatRequest);
             var chatResponse = futureChat.join();
             HistoryEvaluation historyEvaluation = new HistoryEvaluation(chatResponse.firstContent(), false);
+            return chatResponse.firstContent();
+        } catch (OpenAIException e) {
+            e.printStackTrace();
+            return "Error generating question: " + e.getMessage();
+        }
+    }
+
+    public String generateGuide(String prompt) {
+        int creditdiff;
+        String model;
+        try {
+            String systemPrompt;
+                systemPrompt = "You are an expert tutor on the topic the student is prompting you about. Provide a concise explanation the topic the student is asking about at the quality of a master tutor. Only provide the guide; no extra dialogue";
+                creditdiff = 500;
+                model = "gpt-4.1";
+
+
+            var chatRequest = ChatRequest.builder()
+                    .model(model)
+                    .message(ChatMessage.SystemMessage.of(systemPrompt))
+                    .message(ChatMessage.UserMessage.of(prompt))
+                    .temperature(0.5)
+                    .topP(0.7)
+                    .maxCompletionTokens(creditdiff)
+                    .build();
+
+            var futureChat = openAI.chatCompletions().create(chatRequest);
+            var chatResponse = futureChat.join();
+            GuideEvaluation guideEvaluation = new GuideEvaluation(chatResponse.firstContent());
             return chatResponse.firstContent();
         } catch (OpenAIException e) {
             e.printStackTrace();

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../../AuthContext";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Send } from "lucide-react";
 
 export default function StudyAnything({
                                           onBack,
@@ -13,11 +13,14 @@ export default function StudyAnything({
     const [query, setQuery] = useState("");
     const [submittedSubject, setSubmittedSubject] = useState("");
 
+    const handleSend = () => {
+        if (!query.trim()) return;
+        setSubmittedSubject(query.trim());
+        setQuery("");
+    };
+
     const handleKeyDown = (e) => {
-        if (e.key === "Enter" && query.trim()) {
-            setSubmittedSubject(query.trim());
-            setQuery("");
-        }
+        if (e.key === "Enter") handleSend();
     };
 
     const headerClass =
@@ -36,23 +39,42 @@ export default function StudyAnything({
 
                 <h1 className={headerClass}>STUDY ANYTHING</h1>
 
-                <input
-                    type="text"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="What do you want to learn?"
-                    className="
-            w-full max-w-xl
-            bg-white/20 text-white placeholder-gray-200 font-semibold
-            px-6 py-4
-            rounded-3xl
-            backdrop-blur-md
-            border border-white/20
-            focus:outline-none focus:ring-2 focus:ring-teal-400
-            transition-shadow duration-300
-          "
-                />
+                {/* input + send button */}
+                <div className="flex w-full max-w-xl items-center gap-2">
+                    <input
+                        type="text"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder={
+                            submittedSubject || "What do you want to learn?"
+                        }
+                        className="
+              flex-1
+              bg-white/20 text-white placeholder-gray-200 font-semibold
+              px-6 py-4
+              rounded-3xl
+              backdrop-blur-md
+              border border-white/20
+              focus:outline-none focus:ring-2 focus:ring-teal-400
+              transition-shadow duration-300
+            "
+                    />
+                    <button
+                        onClick={handleSend}
+                        aria-label="Send query"
+                        className="
+              w-12 h-12
+              animated-gradient-all
+              rounded-full
+              flex items-center justify-center
+              hover:bg-teal-500
+              transition-colors
+            "
+                    >
+                        <Send className="w-6 h-6 text-white" />
+                    </button>
+                </div>
 
                 {submittedSubject && (
                     <div className="mt-12 flex w-full max-w-xl gap-6">
@@ -106,7 +128,7 @@ export default function StudyAnything({
               </span>
                         </button>
 
-                        {/* Study Material (stub for now) */}
+                        {/* Study Material */}
                         <button
                             onClick={() => onSelectStudyMaterial(submittedSubject)}
                             className="
@@ -127,7 +149,7 @@ export default function StudyAnything({
                         >
                             <span className="text-2xl font-semibold">Study Material</span>
                             <span className="mt-2 text-sm text-white/80">
-                (Coming soon…)
+                Fully prepared notes
               </span>
                         </button>
                     </div>

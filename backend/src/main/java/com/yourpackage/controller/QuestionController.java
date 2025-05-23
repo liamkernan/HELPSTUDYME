@@ -23,6 +23,12 @@ public class QuestionController {
         return openAIService.generateQuestion(prompt, type);
     }
 
+    @GetMapping("/guide")
+    public String generateGuide(@RequestParam("subject") String subject) {
+        String prompt = getPromptForGuide(subject);
+        return openAIService.generateGuide(prompt);
+    }
+
     @GetMapping("/question-history")
     public List<HistoryEvaluation> getQuestionHistory() {
         return HistoryEvaluation.getTotal();
@@ -57,5 +63,11 @@ public class QuestionController {
         }
 
         return basePrompt + subject + ".";
+    }
+
+    private String getPromptForGuide(String subject) {
+        String base = "Create a study guide for " + subject + ".";
+
+        return base;
     }
 }

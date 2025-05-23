@@ -78,6 +78,26 @@ export default function App() {
         }
     };
 
+    const fetchGuide = async (subject) => {
+        setLoading(true);
+        setActiveSubject(subject);
+        setCurrentScreen("studymaterial");
+
+        try {
+            const url = `${API_BASE}/guide?subject=` + encodeURIComponent(subject);
+            const res = await fetch(url);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const raw = await res.text();
+            if (!raw.trim()) throw new Error("Empty response");
+
+            setQuestion(raw);
+        } catch (err) {
+            console.error("fetchQuestion:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     //test
 
     const parseMCQ = (raw) => {
@@ -196,17 +216,21 @@ export default function App() {
                          onSelectFreeResponse={(subj) =>
                            fetchQuestion(subj, "free-response")
                          }
-                         onSelectStudyMaterial={goStudyMaterial}
+                         onSelectStudyMaterial={(subj) => fetchGuide(subj)}
 
                        />
 
                 )}
                 {currentScreen === "studymaterial" && (
-                    <StudyMaterial
-                        onBack={goSelect}
-                    />
+                        <StudyMaterial
+                          question={question}
+                          loading={loading}
+                          activeSubject={activeSubject}
+                          onBackToMenu={goSelect}
+                        />
+                    )}
 
-                )}
+                )
                 {currentScreen === "subject-select" && (
                     <ApSelector
                         onSelectSubject={(subj) => { setActiveSubject(subj); goTypeSelect(); }}
