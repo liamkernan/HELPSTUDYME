@@ -5,9 +5,11 @@ updates:
     directory: "/frontend/ap-question-generator"
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 10
 
   # Backend
   - package-ecosystem: maven
     directory: "/backend"
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 10
