@@ -19,6 +19,7 @@ import ModeSelector from "./components/catagories/ModeSelector";
 import SatSelector from "./components/catagories/SatSelector";
 import ActSelector from "./components/catagories/ActSelector";
 import StudyAnything from "./components/catagories/StudyAnything";
+import StudyMaterial from "./components/StudyMaterial";
 
 const API_BASE = process.env.REACT_APP_API_BASE;
 
@@ -44,6 +45,7 @@ export default function App() {
     const goSAT           = () => setCurrentScreen("sat");
     const goACT           = () => setCurrentScreen("act");
     const goQuestion           = () => setCurrentScreen("question");
+    const goStudyMaterial = () => setCurrentScreen("studymaterial");
 
     const fetchQuestion = async (subject, questionType) => {
         setLoading(true);
@@ -185,8 +187,23 @@ export default function App() {
 
                 )}
                 {currentScreen === "yours" && (
-                    <StudyAnything onBack={goSelect}
-                                   onViewHistory={goHistory}
+                    <StudyAnything
+                         onBack={goSelect}
+                         onViewHistory={goHistory}
+                         onSelectMultipleChoice={(subj) =>
+                           fetchQuestion(subj, "multiple-choice")
+                         }
+                         onSelectFreeResponse={(subj) =>
+                           fetchQuestion(subj, "free-response")
+                         }
+                         onSelectStudyMaterial={goStudyMaterial}
+
+                       />
+
+                )}
+                {currentScreen === "studymaterial" && (
+                    <StudyMaterial
+                        onBack={goSelect}
                     />
 
                 )}
