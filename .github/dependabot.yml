@@ -1,0 +1,13 @@
+version: 2
+updates:
+  # Frontend
+  - package-ecosystem: "npm"
+    directory: "/frontend/ap-question-generator"
+    schedule:
+      interval: "weekly"
+
+  # Backend
+  - package-ecosystem: maven
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
