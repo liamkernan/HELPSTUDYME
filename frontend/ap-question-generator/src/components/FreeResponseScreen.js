@@ -1,41 +1,61 @@
-import React, { useState, useMemo } from "react";
-import katex from "katex";
+import React, { useState, useMemo } from 'react';
+import { InlineMath, BlockMath } from 'react-katex';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import 'katex/dist/katex.min.css';
 
-function FreeResponseScreen({
-                                question,
-                                loading,
-                                activeSubject,
-                                onSubmitResponse,
-                                onNewQuestion,
-                                onBackToMenu,
-                                feedbackData
-                            }) {
-    const [userResponse, setUserResponse] = useState("");
+function MathRenderer({ text }) {
+    const regex = /\\\[(.+?)\\\]|\\\((.+?)\\\)/gs;
+    const parts = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+        if (match.index > lastIndex) {
+            parts.push({ type: 'text', content: text.slice(lastIndex, match.index) });
+        }
+        if (match[1] != null) {
+            parts.push({ type: 'display', content: match[1].trim() });
+        } else {
+            parts.push({ type: 'inline', content: match[2].trim() });
+        }
+        lastIndex = match.index + match[0].length;
+    }
+    if (lastIndex < text.length) {
+        parts.push({ type: 'text', content: text.slice(lastIndex) });
+    }
+
+    return parts.map((part, i) => {
+        if (part.type === 'display') return <BlockMath key={i} math={part.content} />;
+        if (part.type === 'inline')  return <InlineMath key={i} math={part.content} />;
+        return <span key={i}>{part.content}</span>;
+    });
+}
+
+export default function FreeResponseScreen({
+                                               question,
+                                               loading,
+                                               activeSubject,
+                                               onSubmitResponse,
+                                               onNewQuestion,
+                                               onBackToMenu,
+                                               feedbackData
+                                           }) {
+    const [userResponse, setUserResponse] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // Split on blank lines so multi-line LaTeX blocks stay intact
+    const questionBlocks = useMemo(() => question.split(/\n{2,}/g), [question]);
+    const responseBlocks = useMemo(() => userResponse.split(/\n{2,}/g), [userResponse]);
+    const feedbackBlocks = useMemo(
+        () => (feedbackData?.feedback || '').split(/\n{2,}/g),
+        [feedbackData]
+    );
 
     const formatSubjectName = subject =>
         subject
             .split('-')
             .map(w => w[0].toUpperCase() + w.slice(1))
             .join(' ');
-
-    const renderKaTeX = raw => {
-        if (!raw) return '';
-        let html = raw
-            .replace(/\$\$([^$]+?)\$\$/gs, (_, expr) =>
-                katex.renderToString(expr, { displayMode: true, throwOnError: false })
-            )
-            .replace(/\$([^$]+?)\$/gs, (_, expr) =>
-                katex.renderToString(expr, { displayMode: false, throwOnError: false })
-            );
-        html = html.replace(/\n/g, '<br/>');
-        return html;
-    };
-
-    const questionHTML = useMemo(() => renderKaTeX(question), [question]);
-    const responseHTML = useMemo(() => renderKaTeX(userResponse), [userResponse]);
-    const feedbackHTML = useMemo(() => feedbackData ? renderKaTeX(feedbackData.feedback) : '', [feedbackData]);
 
     const handleSubmit = async () => {
         if (!userResponse.trim()) return;
@@ -50,26 +70,31 @@ function FreeResponseScreen({
                 <h2 className="text-2xl font-bold text-white">
                     {activeSubject && formatSubjectName(activeSubject)} Free Response
                 </h2>
-                <button onClick={onBackToMenu} className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg">
-                    Back to Menu
+                <button
+                    onClick={onBackToMenu}
+                    className="bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-full shadow-lg backdrop-blur transition"
+                >
+                    ← Back to Menu
                 </button>
             </div>
 
             {loading ? (
                 <div className="flex flex-col items-center justify-center py-16">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-300 mb-4"></div>
-                    <p className="text-blue-50">Generating question...</p>
+                    <ArrowPathIcon className="h-12 w-12 text-pastelBlue animate-spin mb-4" />
+                    <p className="text-white">Generating question...</p>
                 </div>
             ) : (
                 <div className="bg-white p-6 rounded-lg shadow-md">
-                    <div
-                        className="question-text mb-6"
-                        style={{ whiteSpace: 'pre-wrap' }}
-                        dangerouslySetInnerHTML={{ __html: questionHTML }}
-                    />
+                    {/* Question blocks */}
+                    {questionBlocks.map((block, idx) => (
+                        <div key={idx} className="question-text mb-6">
+                            <MathRenderer text={block} />
+                        </div>
+                    ))}
 
                     {!feedbackData ? (
                         <>
+                            {/* Response textarea */}
                             <div className="mb-4">
                 <textarea
                     className="w-full p-3 border border-gray-300 rounded-lg min-h-[200px] focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -80,6 +105,7 @@ function FreeResponseScreen({
                 />
                             </div>
 
+                            {/* Submit / New Question */}
                             <div className="flex justify-between">
                                 <button
                                     onClick={handleSubmit}
@@ -92,32 +118,49 @@ function FreeResponseScreen({
                                 >
                                     {isSubmitting ? 'Grading...' : 'Submit Response'}
                                 </button>
-                                <button onClick={onNewQuestion} className="bg-yellow-200 hover:bg-yellow-300 px-4 py-2 rounded-lg">
+                                <button
+                                    onClick={onNewQuestion}
+                                    className="bg-yellow-200 hover:bg-yellow-300 px-4 py-2 rounded-lg"
+                                >
                                     New Question
                                 </button>
                             </div>
                         </>
                     ) : (
                         <div className="feedback-container">
+                            {/* User response blocks */}
                             <h3 className="text-xl font-semibold mb-3">Your Response:</h3>
-                            <div
-                                className="user-response p-3 bg-gray-50 rounded-lg mb-5"
-                                dangerouslySetInnerHTML={{ __html: responseHTML }}
-                            />
-
-                            <h3 className="text-xl font-semibold mb-3">Feedback:</h3>
-                            <div
-                                className="feedback p-4 bg-blue-50 border border-blue-200 rounded-lg mb-5"
-                                dangerouslySetInnerHTML={{ __html: feedbackHTML }}
-                            />
-
-                            <div className="score-section p-4 bg-green-50 border border-green-200 rounded-lg mb-5">
-                                <h4 className="text-lg font-medium mb-2">Score Analysis</h4>
-                                <p className="mb-2"><strong>Projected Score:</strong> {feedbackData.score} out of {feedbackData.maxScore}</p>
-                                <p><strong>Score Explanation:</strong> {feedbackData.scoreExplanation}</p>
+                            <div className="user-response p-3 bg-gray-50 rounded-lg mb-5">
+                                {responseBlocks.map((block, idx) => (
+                                    <div key={idx} className="mb-4">
+                                        <MathRenderer text={block} />
+                                    </div>
+                                ))}
                             </div>
 
-                            <div className="flex justify-between">
+                            {/* Feedback blocks */}
+                            <h3 className="text-xl font-semibold mb-3">Feedback:</h3>
+                            <div className="feedback p-4 bg-blue-50 border border-blue-200 rounded-lg mb-5">
+                                {feedbackBlocks.map((block, idx) => (
+                                    <div key={idx} className="mb-4">
+                                        <MathRenderer text={block} />
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Score Analysis */}
+                            <div className="score-section p-4 bg-green-50 border border-green-200 rounded-lg mb-5">
+                                <h4 className="text-lg font-medium mb-2">Score Analysis</h4>
+                                <p className="mb-2">
+                                    <strong>Projected Score:</strong> {feedbackData.score} out of {feedbackData.maxScore}
+                                </p>
+                                <p>
+                                    <strong>Score Explanation:</strong> {feedbackData.scoreExplanation}
+                                </p>
+                            </div>
+
+                            {/* Try Another */}
+                            <div className="flex justify-end">
                                 <button
                                     onClick={() => {
                                         setUserResponse('');
@@ -135,5 +178,3 @@ function FreeResponseScreen({
         </div>
     );
 }
-
-export default FreeResponseScreen;
