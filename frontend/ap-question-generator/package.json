@@ -1,6 +1,7 @@
 {
   "name": "ap-question-generator",
   "version": "0.1.0",
+  "homepage": ".",
   "private": true,
   "dependencies": {
     "@heroicons/react": "^2.2.0",
