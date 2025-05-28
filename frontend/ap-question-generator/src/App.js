@@ -67,7 +67,9 @@ export default function App() {
         setAnswerSubmitted(false);
         setFeedbackData(null);
 
-        navigate(questionType === "multiple-choice" ? "/question" : "/free-response");
+        navigate(
+            `/question?subject=${encodeURIComponent(subject)}&type=${questionType}`
+        );
 
         try {
             const url = `${API_BASE}/question/${encodeURIComponent(subject)}?type=${questionType}`;
@@ -94,7 +96,9 @@ export default function App() {
         setLoading(true);
         setQuestion("");
 
-        navigate("/studymaterial");
+        navigate(
+            `/studymaterial?subject=${encodeURIComponent(subject)}`
+        );
 
         try {
             const url = `${API_BASE}/guide?subject=${encodeURIComponent(subject)}`;
