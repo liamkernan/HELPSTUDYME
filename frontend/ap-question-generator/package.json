@@ -16,6 +16,7 @@
     "react-dom": "^18.2.0",
     "react-katex": "^3.0.1",
     "react-markdown": "^10.1.0",
+    "react-router-dom": "^7.6.1",
     "react-scripts": "5.0.1",
     "rehype-katex": "^7.0.1",
     "remark-gfm": "^4.0.1",
