@@ -35,31 +35,57 @@ export default function App() {
     const [feedbackData,  setFeedbackData]  = useState(null);
 
     const navigate = (page, state = {}) => {
+        console.log('Navigating to:', page, state);
         setCurrentPage(page);
         if (state.subject) setActiveSubject(state.subject);
-        window.history.pushState({ page, ...state }, "", `#${page}`);
+        
+        // Update URL hash
+        if (window.location.hash !== `#${page}`) {
+            window.history.pushState({ page, ...state }, "", `#${page}`);
+        }
+    };
+
+    const goBack = () => {
+        window.history.back();
     };
 
     useEffect(() => {
         const handlePopState = (event) => {
-            if (event.state) {
+            console.log('PopState event:', event.state);
+            if (event.state && event.state.page) {
                 setCurrentPage(event.state.page);
                 if (event.state.subject) setActiveSubject(event.state.subject);
             } else {
-                setCurrentPage("landing");
+                // Handle hash change without state
+                const hash = window.location.hash.slice(1);
+                console.log('Hash from URL:', hash);
+                setCurrentPage(hash || "landing");
+            }
+        };
+
+        const handleHashChange = () => {
+            const hash = window.location.hash.slice(1);
+            console.log('Hash changed to:', hash);
+            if (hash && hash !== currentPage) {
+                setCurrentPage(hash || "landing");
             }
         };
 
         window.addEventListener("popstate", handlePopState);
+        window.addEventListener("hashchange", handleHashChange);
         
         // Handle initial page load
-        const hash = window.location.hash.slice(1);
-        if (hash) {
-            setCurrentPage(hash);
+        const initialHash = window.location.hash.slice(1);
+        console.log('Initial hash:', initialHash);
+        if (initialHash && initialHash !== currentPage) {
+            setCurrentPage(initialHash);
         }
 
-        return () => window.removeEventListener("popstate", handlePopState);
-    }, []);
+        return () => {
+            window.removeEventListener("popstate", handlePopState);
+            window.removeEventListener("hashchange", handleHashChange);
+        };
+    }, [currentPage]);
 
     const parseMCQ = (raw) => {
         const clean = raw.replace(/<[^>]*>/g, "").trim();
@@ -195,7 +221,7 @@ export default function App() {
                 );
 
             case "about":
-                return <About onBack={() => window.history.back()} />;
+                return <About onBack={goBack} />;
 
             case "select":
                 return (
