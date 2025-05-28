@@ -57,9 +57,7 @@ export default function App() {
         return { processedText: clean, correctAnswerLetter: "B" }; // fallback
     };
 
-    // --- fetchQuestion ------------------------------------------
     const fetchQuestion = async (subject, questionType) => {
-        /* 1. Reset state and show loader */
         setActiveSubject(subject);
         setLoading(true);
         setQuestion("");
@@ -69,10 +67,8 @@ export default function App() {
         setAnswerSubmitted(false);
         setFeedbackData(null);
 
-        /* 2. Navigate immediately so the screen (with its spinner) appears */
         navigate(questionType === "multiple-choice" ? "/question" : "/free-response");
 
-        /* 3. Fetch data in the background */
         try {
             const url = `${API_BASE}/question/${encodeURIComponent(subject)}?type=${questionType}`;
             const res = await fetch(url);
@@ -89,20 +85,17 @@ export default function App() {
         } catch (err) {
             console.error("fetchQuestion:", err);
         } finally {
-            setLoading(false);     // spinner disappears once data is ready
+            setLoading(false);
         }
     };
 
     const fetchGuide = async (subject) => {
-        /* 1. Reset state and show loader */
         setActiveSubject(subject);
         setLoading(true);
         setQuestion("");
 
-        /* 2. Navigate immediately */
         navigate("/studymaterial");
 
-        /* 3. Fetch data in the background */
         try {
             const url = `${API_BASE}/guide?subject=${encodeURIComponent(subject)}`;
             const res = await fetch(url);
@@ -185,13 +178,12 @@ export default function App() {
                                 onAP={() => navigate("/select/ap")}
                                 onSAT={() => navigate("/select/sat")}
                                 onACT={() => navigate("/select/act")}
-                                onYOURS={() => navigate("/studyanything")}
+                                onYOURS={() => navigate("/anything")}
                                 onBack={() => navigate("/")}
                             />
                         }
                     />
 
-                    {/* ───────────────── AP subject pick ───────── */}
                     <Route
                         path="/select/ap"
                         element={
@@ -228,7 +220,7 @@ export default function App() {
                     />
 
                     <Route
-                        path="/studyanything"
+                        path="/anything"
                         element={
                             <StudyAnything
                                 onBack={() => navigate("/select")}
