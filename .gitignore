@@ -13,7 +13,7 @@ yarn-error.log*
 ########################################################
 #  Back‑end (Spring Boot) artifacts
 ########################################################
-# Maven / Gradle build output
+
 target/
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -50,6 +50,10 @@ build/
 #  OS‑specific junk
 ########################################################
 .DS_Store
+# Terraform
+**/.terraform
+terraform.tfstate
+secrets.auto.tfvars
 
 ########################################################
 #  **Important** — keep the Maven wrapper
