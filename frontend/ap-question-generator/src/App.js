@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import "katex/dist/katex.min.css";
 
@@ -25,8 +24,7 @@ import { logQuestion }  from "./history";
 const API_BASE = process.env.REACT_APP_API_BASE;
 
 export default function App() {
-    const navigate = useNavigate();
-
+    const [currentPage, setCurrentPage] = useState("landing");
     const [activeSubject, setActiveSubject] = useState(null);
     const [question,      setQuestion]      = useState("");
     const [selectedAnswer,setSelectedAnswer]= useState(null);
@@ -35,6 +33,33 @@ export default function App() {
     const [showFeedback,  setShowFeedback]  = useState(false);
     const [answerSubmitted,setAnswerSubmitted] = useState(false);
     const [feedbackData,  setFeedbackData]  = useState(null);
+
+    const navigate = (page, state = {}) => {
+        setCurrentPage(page);
+        if (state.subject) setActiveSubject(state.subject);
+        window.history.pushState({ page, ...state }, "", `#${page}`);
+    };
+
+    useEffect(() => {
+        const handlePopState = (event) => {
+            if (event.state) {
+                setCurrentPage(event.state.page);
+                if (event.state.subject) setActiveSubject(event.state.subject);
+            } else {
+                setCurrentPage("landing");
+            }
+        };
+
+        window.addEventListener("popstate", handlePopState);
+        
+        // Handle initial page load
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+            setCurrentPage(hash);
+        }
+
+        return () => window.removeEventListener("popstate", handlePopState);
+    }, []);
 
     const parseMCQ = (raw) => {
         const clean = raw.replace(/<[^>]*>/g, "").trim();
@@ -67,9 +92,11 @@ export default function App() {
         setAnswerSubmitted(false);
         setFeedbackData(null);
 
-        navigate(
-            `/question?subject=${encodeURIComponent(subject)}&type=${questionType}`
-        );
+        if (questionType === "free-response") {
+            navigate("free-response", { subject, questionType });
+        } else {
+            navigate("question", { subject, questionType });
+        }
 
         try {
             const url = `${API_BASE}/question/${encodeURIComponent(subject)}?type=${questionType}`;
@@ -96,9 +123,7 @@ export default function App() {
         setLoading(true);
         setQuestion("");
 
-        navigate(
-            `/studymaterial?subject=${encodeURIComponent(subject)}`
-        );
+        navigate("studymaterial", { subject });
 
         try {
             const url = `${API_BASE}/guide?subject=${encodeURIComponent(subject)}`;
@@ -158,180 +183,171 @@ export default function App() {
         }
     };
 
+    const renderPage = () => {
+        switch (currentPage) {
+            case "landing":
+                return (
+                    <LandingPage
+                        onGetStarted={() => navigate("select")}
+                        onViewHistory={() => navigate("history")}
+                        onAbout={() => navigate("about")}
+                    />
+                );
+
+            case "about":
+                return <About onBack={() => window.history.back()} />;
+
+            case "select":
+                return (
+                    <ModeSelector
+                        onAP={() => navigate("select-ap")}
+                        onSAT={() => navigate("select-sat")}
+                        onACT={() => navigate("select-act")}
+                        onYOURS={() => navigate("anything")}
+                        onBack={() => navigate("landing")}
+                    />
+                );
+
+            case "select-ap":
+                return (
+                    <ApSelector
+                        onSelectSubject={(subj) => {
+                            setActiveSubject(subj);
+                            navigate("type-select");
+                        }}
+                        onBack={() => navigate("select")}
+                        onViewHistory={() => navigate("history")}
+                    />
+                );
+
+            case "select-sat":
+                return (
+                    <SatSelector
+                        onBack={() => navigate("select")}
+                        onSelectSubject={(subj) => fetchQuestion(`SAT ${subj}`, "multiple-choice")}
+                        onViewHistory={() => navigate("history")}
+                    />
+                );
+
+            case "select-act":
+                return (
+                    <ActSelector
+                        onBack={() => navigate("select")}
+                        onSelectSubject={(subj) => fetchQuestion(`ACT ${subj}`, "multiple-choice")}
+                        onViewHistory={() => navigate("history")}
+                    />
+                );
+
+            case "anything":
+                return (
+                    <StudyAnything
+                        onBack={() => navigate("select")}
+                        onViewHistory={() => navigate("history")}
+                        onSelectMultipleChoice={(subj) => fetchQuestion(subj, "multiple-choice")}
+                        onSelectFreeResponse={(subj) => fetchQuestion(subj, "free-response")}
+                        onSelectStudyMaterial={(subj) => fetchGuide(subj)}
+                    />
+                );
+
+            case "type-select":
+                return (
+                    <>
+                        <Header onBack={() => navigate("landing")} />
+                        <main className="flex-grow container mx-auto p-4">
+                            <QuestionTypeSelector
+                                activeSubject={activeSubject}
+                                onSelectType={(type) => fetchQuestion(activeSubject, type)}
+                                onBack={() => navigate("select-ap")}
+                            />
+                        </main>
+                        <Footer />
+                    </>
+                );
+
+            case "question":
+                return (
+                    <>
+                        <Header onBack={() => navigate("landing")} />
+                        <main className="flex-grow container mx-auto p-4">
+                            <QuestionScreen
+                                question={question}
+                                loading={loading}
+                                activeSubject={activeSubject}
+                                selectedAnswer={selectedAnswer}
+                                setSelectedAnswer={setSelectedAnswer}
+                                correctAnswer={correctAnswer}
+                                showFeedback={showFeedback}
+                                answerSubmitted={answerSubmitted}
+                                onSubmitAnswer={handleSubmitAnswer}
+                                onNewQuestion={() => fetchQuestion(activeSubject, "multiple-choice")}
+                                onBackToMenu={() => navigate("select")}
+                            />
+                        </main>
+                        <Footer />
+                    </>
+                );
+
+            case "free-response":
+                return (
+                    <>
+                        <Header onBack={() => navigate("landing")} />
+                        <main className="flex-grow container mx-auto p-4">
+                            <FreeResponseScreen
+                                question={question}
+                                loading={loading}
+                                activeSubject={activeSubject}
+                                onSubmitResponse={handleSubmitFreeResponse}
+                                onNewQuestion={() => fetchQuestion(activeSubject, "free-response")}
+                                onBackToMenu={() => navigate("select-ap")}
+                                feedbackData={feedbackData}
+                            />
+                        </main>
+                        <Footer />
+                    </>
+                );
+
+            case "studymaterial":
+                return (
+                    <>
+                        <Header onBack={() => navigate("landing")} />
+                        <main className="flex-grow container mx-auto p-4">
+                            <StudyMaterial
+                                question={question}
+                                loading={loading}
+                                activeSubject={activeSubject}
+                                onBackToMenu={() => navigate("select")}
+                            />
+                        </main>
+                        <Footer />
+                    </>
+                );
+
+            case "history":
+                return (
+                    <>
+                        <Header onBack={() => navigate("landing")} />
+                        <main className="flex-grow container mx-auto p-4">
+                            <QuestionHistory onBackToMenu={() => navigate("select")}/>
+                        </main>
+                        <Footer />
+                    </>
+                );
+
+            default:
+                return (
+                    <LandingPage
+                        onGetStarted={() => navigate("select")}
+                        onViewHistory={() => navigate("history")}
+                        onAbout={() => navigate("about")}
+                    />
+                );
+        }
+    };
+
     return (
         <AuthProvider>
             <div className="min-h-screen flex flex-col bg-blue-950">
-                <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            <LandingPage
-                                onGetStarted={() => navigate("/select")}
-                                onViewHistory={() => navigate("/history")}
-                                onAbout={() => navigate("/about")}
-                            />
-                        }
-                    />
-
-                    <Route path="/about" element={<About onBack={() => navigate(-1)} />} />
-
-                    <Route
-                        path="/select"
-                        element={
-                            <ModeSelector
-                                onAP={() => navigate("/select/ap")}
-                                onSAT={() => navigate("/select/sat")}
-                                onACT={() => navigate("/select/act")}
-                                onYOURS={() => navigate("/anything")}
-                                onBack={() => navigate("/")}
-                            />
-                        }
-                    />
-
-                    <Route
-                        path="/select/ap"
-                        element={
-                            <ApSelector
-                                onSelectSubject={(subj) => {
-                                    setActiveSubject(subj);
-                                    navigate("/type-select");
-                                }}
-                                onBack={() => navigate("/select")}
-                                onViewHistory={() => navigate("/history")}
-                            />
-                        }
-                    />
-
-                    <Route
-                        path="/select/sat"
-                        element={
-                            <SatSelector
-                                onBack={() => navigate("/select")}
-                                onSelectSubject={(subj) => fetchQuestion(`SAT ${subj}`, "multiple-choice")}
-                                onViewHistory={() => navigate("/history")}
-                            />
-                        }
-                    />
-                    <Route
-                        path="/select/act"
-                        element={
-                            <ActSelector
-                                onBack={() => navigate("/select")}
-                                onSelectSubject={(subj) => fetchQuestion(`ACT ${subj}`, "multiple-choice")}
-                                onViewHistory={() => navigate("/history")}
-                            />
-                        }
-                    />
-
-                    <Route
-                        path="/anything"
-                        element={
-                            <StudyAnything
-                                onBack={() => navigate("/select")}
-                                onViewHistory={() => navigate("/history")}
-                                onSelectMultipleChoice={(subj) => fetchQuestion(subj, "multiple-choice")}
-                                onSelectFreeResponse={(subj) => fetchQuestion(subj, "free-response")}
-                                onSelectStudyMaterial={(subj) => fetchGuide(subj)}
-                            />
-                        }
-                    />
-
-                    <Route
-                        path="/type-select"
-                        element={
-                            <>
-                                <Header onBack={() => navigate("/")} />
-                                <main className="flex-grow container mx-auto p-4">
-                                    <QuestionTypeSelector
-                                        activeSubject={activeSubject}
-                                        onSelectType={(type) => fetchQuestion(activeSubject, type)}
-                                        onBack={() => navigate("/select/ap")}
-                                    />
-                                </main>
-                                <Footer />
-                            </>
-                        }
-                    />
-
-                    <Route
-                        path="/question"
-                        element={
-                            <>
-                                <Header onBack={() => navigate("/")} />
-                                <main className="flex-grow container mx-auto p-4">
-                                    <QuestionScreen
-                                        question={question}
-                                        loading={loading}
-                                        activeSubject={activeSubject}
-                                        selectedAnswer={selectedAnswer}
-                                        setSelectedAnswer={setSelectedAnswer}
-                                        correctAnswer={correctAnswer}
-                                        showFeedback={showFeedback}
-                                        answerSubmitted={answerSubmitted}
-                                        onSubmitAnswer={handleSubmitAnswer}
-                                        onNewQuestion={() => fetchQuestion(activeSubject, "multiple-choice")}
-                                        onBackToMenu={() => navigate("/select")}
-                                    />
-                                </main>
-                                <Footer />
-                            </>
-                        }
-                    />
-
-                    <Route
-                        path="/free-response"
-                        element={
-                            <>
-                                <Header onBack={() => navigate("/")} />
-                                <main className="flex-grow container mx-auto p-4">
-                                    <FreeResponseScreen
-                                        question={question}
-                                        loading={loading}
-                                        activeSubject={activeSubject}
-                                        onSubmitResponse={handleSubmitFreeResponse}
-                                        onNewQuestion={() => fetchQuestion(activeSubject, "free-response")}
-                                        onBackToMenu={() => navigate("/select/ap")}
-                                        feedbackData={feedbackData}
-                                    />
-                                </main>
-                                <Footer />
-                            </>
-                        }
-                    />
-
-                    <Route
-                        path="/studymaterial"
-                        element={
-                            <>
-                                <Header onBack={() => navigate("/")} />
-                                <main className="flex-grow container mx-auto p-4">
-                                    <StudyMaterial
-                                        question={question}
-                                        loading={loading}
-                                        activeSubject={activeSubject}
-                                        onBackToMenu={() => navigate("/select")}
-                                    />
-                                </main>
-                                <Footer />
-                            </>
-                        }
-                    />
-
-                    <Route
-                        path="/history"
-                        element={
-                            <>
-                                <Header onBack={() => navigate("/")} />
-                                <main className="flex-grow container mx-auto p-4">
-                                    <QuestionHistory onBackToMenu={() => navigate("/select")}/>
-                                </main>
-                                <Footer />
-                            </>
-                        }
-                    />
-
-                    <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
+                {renderPage()}
             </div>
         </AuthProvider>
     );
