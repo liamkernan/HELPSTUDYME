@@ -1,0 +1,12 @@
+name: ap-question-generator
+static_sites:
+- build_command: npm run build
+  environment_slug: node-js
+  github:
+    branch: main
+    deploy_on_push: true
+  name: web
+  output_dir: build
+  routes:
+  - path: /
+  catchall_document: index.html
