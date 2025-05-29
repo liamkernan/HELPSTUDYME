@@ -5,6 +5,7 @@ import com.yourpackage.model.HistoryEvaluation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.yourpackage.service.OpenAIService;
+import com.yourpackage.service.PromptMemoryService;
 import com.yourpackage.model.FreeResponseEvaluation;
 import com.yourpackage.model.EvaluationRequest;
 
@@ -12,15 +13,17 @@ import com.yourpackage.model.EvaluationRequest;
 @RequestMapping("/api")
 public class QuestionController {
     private final OpenAIService openAIService;
+    private final PromptMemoryService memoryService;
 
-    public QuestionController(OpenAIService openAIService) {
+    public QuestionController(OpenAIService openAIService, PromptMemoryService memoryService) {
         this.openAIService = openAIService;
+        this.memoryService = memoryService;
     }
 
     @GetMapping("/question/{subject}")
     public String generateQuestion(@PathVariable String subject, @RequestParam(required = false, defaultValue = "multiple-choice") String type) {
         String prompt = getPromptForSubject(subject, type);
-        return openAIService.generateQuestion(prompt, type);
+        return openAIService.generateQuestion(prompt, type, subject);
     }
 
     @GetMapping("/guide")
@@ -51,6 +54,24 @@ public class QuestionController {
                 request.getResponse()
         );
         return ResponseEntity.ok(evaluation);
+    }
+
+    @GetMapping("/memory/{subject}")
+    public ResponseEntity<List<String>> getSubjectMemory(@PathVariable String subject) {
+        List<String> recentTopics = memoryService.getRecentTopics(subject);
+        return ResponseEntity.ok(recentTopics);
+    }
+
+    @GetMapping("/memory")
+    public ResponseEntity<Map<String, List<String>>> getAllMemory() {
+        Map<String, List<String>> allTopics = memoryService.getAllTopics();
+        return ResponseEntity.ok(allTopics);
+    }
+
+    @DeleteMapping("/memory/{subject}")
+    public ResponseEntity<Void> clearSubjectMemory(@PathVariable String subject) {
+        memoryService.clearMemory(subject);
+        return ResponseEntity.ok().build();
     }
 
     private String getPromptForSubject(String subject, String type) {
