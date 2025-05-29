@@ -15,8 +15,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class OpenAIService {
     private final SimpleOpenAI openAI;
     private final ObjectMapper objectMapper;
+    private final PromptMemoryService memoryService;
 
-    public OpenAIService() {
+    public OpenAIService(PromptMemoryService memoryService) {
+        this.memoryService = memoryService;
         this.openAI = SimpleOpenAI.builder()
                 .apiKey(System.getenv("OPENAI_API_KEY"))
                 .clientAdapter(new OkHttpClientAdapter())
@@ -24,7 +26,7 @@ public class OpenAIService {
         this.objectMapper = new ObjectMapper();
     }
 
-    public String generateQuestion(String prompt, String type) {
+    public String generateQuestion(String prompt, String type, String subject) {
         int creditdiff;
         String model;
         try {
@@ -35,15 +37,17 @@ public class OpenAIService {
                 creditdiff = 4000;
                 model = "gpt-4.1";
             } else {
-                systemPrompt = "You are an expert on all classes. Create challenging and full length multiple choice questions. Only provide the question and 4 multiple choice options, and the choices should be marked with the letters A B C D accordingly. Create a multiple choice question with exactly one correct answer. Mark the correct option with *** after the letter (e.g., A***). The other three options must be clearly incorrect. Do not create ambiguous or subjective answer choices. If the question involves math or physics, compute the correct answer before writing the choices; make sure to format for KaTEK. If the subject is EuroHistory, HumanGeo, Lit, or UsHistory always provide full text excerpts and in-depth questions. If the subject is CompSci only provide code-example questions in Java, no terms. No extra text or explanations.";
+                systemPrompt = "You are an expert on all classes. Create challenging and full length multiple choice questions. Only provide the question and 4 multiple choice options, and the choices should be marked with the letters A B C D accordingly. Create a multiple choice question with exactly one correct answer. Mark the correct option with *** IMMEDIATELY after the letter (e.g., A***). The other three options must be clearly incorrect. Do not create ambiguous or subjective answer choices. CRITICAL: For math questions, always double-check your calculations and ensure the *** marker is placed correctly after the letter of the correct answer. If the question involves math or physics, compute the correct answer before writing the choices; make sure to format for KaTeX. If the subject is EuroHistory, HumanGeo, Lit, or UsHistory always provide full text excerpts and in-depth questions. If the subject is CompSci only provide code-example questions in Java, no terms. No extra text or explanations. Format example:\nA) Wrong answer\nB***) Correct answer\nC) Wrong answer\nD) Wrong answer";
                 creditdiff = 2000;
                 model = "gpt-4.1-mini";
             }
 
+            String diversePrompt = memoryService.generateDiversePrompt(subject, type);
+            
             var chatRequest = ChatRequest.builder()
                     .model(model)
                     .message(ChatMessage.SystemMessage.of(systemPrompt))
-                    .message(ChatMessage.UserMessage.of(prompt))
+                    .message(ChatMessage.UserMessage.of(diversePrompt))
                     .temperature(1.2)
                     .topP(1.0)
                     .maxCompletionTokens(creditdiff)
@@ -51,8 +55,13 @@ public class OpenAIService {
 
             var futureChat = openAI.chatCompletions().create(chatRequest);
             var chatResponse = futureChat.join();
-            HistoryEvaluation historyEvaluation = new HistoryEvaluation(chatResponse.firstContent(), false);
-            return chatResponse.firstContent();
+            String response = chatResponse.firstContent();
+            
+            String extractedTopic = memoryService.extractTopicFromResponse(response, subject);
+            memoryService.recordTopic(subject, extractedTopic);
+            
+            HistoryEvaluation historyEvaluation = new HistoryEvaluation(response, false);
+            return response;
         } catch (OpenAIException e) {
             e.printStackTrace();
             return "Error generating question: " + e.getMessage();

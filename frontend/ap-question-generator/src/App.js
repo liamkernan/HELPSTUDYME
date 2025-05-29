@@ -89,23 +89,66 @@ export default function App() {
 
     const parseMCQ = (raw) => {
         const clean = raw.replace(/<[^>]*>/g, "").trim();
-        const direct = clean.match(/([A-D])[.)]?\s*\*\*\*/);
-        if (direct) {
-            return {
-                processedText: clean.replace(/\*\*\*/g, ""),
-                correctAnswerLetter: direct[1],
-            };
-        }
-        const options = clean.match(/[A-D][.)]\s*[^\n]*/g) || [];
-        for (const opt of options) {
-            if (opt.includes("***")) {
+        
+        // Enhanced patterns to catch various formats
+        const patterns = [
+            /([A-D])\.?\s*\*\*\*/,          // A*** or A. ***
+            /([A-D])\)\s*\*\*\*/,           // A) ***
+            /([A-D])\s*\*\*\*/,             // A ***
+            /\*\*\*\s*([A-D])[.)]?/,        // *** A or *** A)
+        ];
+        
+        // Try each pattern
+        for (const pattern of patterns) {
+            const match = clean.match(pattern);
+            if (match) {
                 return {
                     processedText: clean.replace(/\*\*\*/g, ""),
-                    correctAnswerLetter: opt.match(/([A-D])/)[1],
+                    correctAnswerLetter: match[1],
                 };
             }
         }
-        return { processedText: clean, correctAnswerLetter: "B" }; // fallback
+        
+        // Enhanced line-by-line search for *** markers
+        const lines = clean.split(/\r?\n/);
+        for (const line of lines) {
+            if (line.includes("***")) {
+                // Look for letter at start of line with *** anywhere in line
+                const letterMatch = line.match(/^([A-D])[.)\s]/);
+                if (letterMatch) {
+                    return {
+                        processedText: clean.replace(/\*\*\*/g, ""),
+                        correctAnswerLetter: letterMatch[1],
+                    };
+                }
+                
+                // Look for *** followed by letter
+                const reverseMatch = line.match(/\*\*\*[.\s]*([A-D])/);
+                if (reverseMatch) {
+                    return {
+                        processedText: clean.replace(/\*\*\*/g, ""),
+                        correctAnswerLetter: reverseMatch[1],
+                    };
+                }
+            }
+        }
+        
+        // Final fallback - look for any A-D followed by content with ***
+        const optionLines = lines.filter(line => /^[A-D][.)\s]/.test(line));
+        for (const line of optionLines) {
+            if (line.includes("***")) {
+                const letter = line.match(/^([A-D])/);
+                if (letter) {
+                    return {
+                        processedText: clean.replace(/\*\*\*/g, ""),
+                        correctAnswerLetter: letter[1],
+                    };
+                }
+            }
+        }
+        
+        console.warn("Could not find correct answer marker in question:", clean.substring(0, 100));
+        return { processedText: clean.replace(/\*\*\*/g, ""), correctAnswerLetter: "A" }; // fallback to A
     };
 
     const fetchQuestion = async (subject, questionType) => {

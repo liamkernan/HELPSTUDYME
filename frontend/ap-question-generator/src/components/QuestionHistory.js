@@ -9,17 +9,40 @@ const parsePrompt = (raw = "", correctLetter = null) => {
         .map((l) => l.trim())
         .filter((l) => l.length);
 
+    // Find the line with *** marker
     let correctIndex = rawLines.findIndex((l) => l.includes("***"));
     const lines = rawLines.map((l) => l.replace(/\*\*\*/g, "").trim());
 
+    // If no *** found but we have a correct letter, find that line
+    if (correctIndex === -1 && correctLetter) {
+        correctIndex = lines.findIndex((l) => {
+            const lineStart = l.match(/^([A-D])[.)\s]/);
+            return lineStart && lineStart[1] === correctLetter;
+        });
+    }
+    
+    // Final fallback - look for any line starting with the correct letter
     if (correctIndex === -1 && correctLetter) {
         correctIndex = lines.findIndex((l) => l.startsWith(correctLetter));
     }
+    
     return { lines, correctIndex };
+};
+
+const getCleanSubjectName = (subject = "") => {
+    if (!subject) return 'General';
+    
+    // Remove emojis and extra characters, but keep spaces
+    const cleanSubject = subject.replace(/[^\w\s]/g, '').trim();
+    
+    // Return the clean subject name without emojis
+    return cleanSubject || 'General';
 };
 
 function QuestionHistory({ onBackToMenu }) {
     const [questions, setQuestions] = useState([]);
+    const [filteredQuestions, setFilteredQuestions] = useState([]);
+    const [selectedSubject, setSelectedSubject] = useState('All Subjects');
     const [loading, setLoading]     = useState(true);
     const [error, setError]         = useState(null);
 
@@ -31,9 +54,19 @@ function QuestionHistory({ onBackToMenu }) {
                     const chosenIndex = lines.findIndex((l) =>
                         l.startsWith(q.chosen)
                     );
-                    return { ...q, lines, correctIndex, chosenIndex };
+                    const topic = getCleanSubjectName(q.subject);
+                    return { ...q, lines, correctIndex, chosenIndex, topic };
                 });
-                setQuestions(processed);
+                
+                // Sort by completion time, newest first
+                const sorted = processed.sort((a, b) => {
+                    const timeA = a.createdAt?.toDate?.() || new Date(a.createdAt) || new Date(0);
+                    const timeB = b.createdAt?.toDate?.() || new Date(b.createdAt) || new Date(0);
+                    return timeB - timeA;
+                });
+                
+                setQuestions(sorted);
+                setFilteredQuestions(sorted);
             })
             .catch((err) => {
                 console.error(err);
@@ -41,6 +74,41 @@ function QuestionHistory({ onBackToMenu }) {
             })
             .finally(() => setLoading(false));
     }, []);
+
+    // Filter questions when subject selection changes
+    useEffect(() => {
+        if (selectedSubject === 'All Subjects') {
+            setFilteredQuestions(questions);
+        } else {
+            setFilteredQuestions(questions.filter(q => q.topic === selectedSubject));
+        }
+    }, [selectedSubject, questions]);
+
+    // Get unique subjects for dropdown
+    const getUniqueSubjects = () => {
+        const subjects = [...new Set(questions.map(q => q.topic))].sort();
+        return ['All Subjects', ...subjects];
+    };
+
+    // Format timestamp for display
+    const formatTimestamp = (timestamp) => {
+        if (!timestamp) return '';
+        
+        const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+        const now = new Date();
+        const diffInHours = (now - date) / (1000 * 60 * 60);
+        
+        if (diffInHours < 1) {
+            const diffInMinutes = Math.floor((now - date) / (1000 * 60));
+            return diffInMinutes < 1 ? 'Just now' : `${diffInMinutes}m ago`;
+        } else if (diffInHours < 24) {
+            return `${Math.floor(diffInHours)}h ago`;
+        } else if (diffInHours < 24 * 7) {
+            return `${Math.floor(diffInHours / 24)}d ago`;
+        } else {
+            return date.toLocaleDateString();
+        }
+    };
 
     useEffect(() => {
         if (!loading) {
@@ -85,11 +153,33 @@ function QuestionHistory({ onBackToMenu }) {
                 </button>
             </div>
 
+            {questions.length > 0 && (
+                <div className="mb-6 flex items-center gap-3">
+                    <label htmlFor="subject-filter" className="text-white font-semibold">
+                        Filter by Subject:
+                    </label>
+                    <select
+                        id="subject-filter"
+                        value={selectedSubject}
+                        onChange={(e) => setSelectedSubject(e.target.value)}
+                        className="bg-gray-800 border border-gray-600 text-white rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors min-w-0"
+                    >
+                        {getUniqueSubjects().map((subject) => (
+                            <option key={subject} value={subject}>
+                                {subject}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            )}
+
             {questions.length === 0 ? (
                 <p className="text-white text-2xl">sign in, or start studying ;)</p>
+            ) : filteredQuestions.length === 0 ? (
+                <p className="text-white text-lg">No questions found for "{selectedSubject}"</p>
             ) : (
                 <ul className="space-y-3">
-                    {questions.map((q, idx) => {
+                    {filteredQuestions.map((q, idx) => {
                         const bgClass = q.match
                             ? "bg-green-600/60 hover:bg-gray-900"
                             : "bg-red-700/60   hover:bg-gray-900";
@@ -99,7 +189,10 @@ function QuestionHistory({ onBackToMenu }) {
                                 key={idx}
                                 className={`p-4 border border-gray-700 rounded-xl shadow transition-colors ${bgClass}`}
                             >
-                                <p className="text-white font-semibold mb-3">Prompt:</p>
+                                <div className="flex items-center justify-between mb-3">
+                                    <p className="text-white font-semibold">{q.topic} Prompt:</p>
+                                    <p className="text-gray-400 text-sm italic">{formatTimestamp(q.createdAt)}</p>
+                                </div>
                                 <div className="whitespace-pre-wrap space-y-1 mb-2">
                                     {q.lines.map((line, i) => {
                                         let cls = "text-gray-300";

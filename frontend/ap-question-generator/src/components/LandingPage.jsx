@@ -7,9 +7,9 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
     const colors = [
         "text-indigo-300",
         "text-pink-400",
-        "text-teal-400",
-        "text-yellow-400",
+        "text-orange-400",
         "text-green-400",
+        "text-yellow-400",
         "text-red-400",
     ];
 
