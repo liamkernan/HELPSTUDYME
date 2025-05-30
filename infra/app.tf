@@ -14,6 +14,12 @@ resource "digitalocean_app" "helpstudyme" {
       dockerfile_path    = "backend/Dockerfile"
       source_dir         = "backend"
       
+      env {
+        key   = "OPENAI_API_KEY"
+        value = var.openai_api_key
+        type  = "SECRET"
+      }
+      
       github {
         repo           = "liamkernan/HELPSTUDYME"
         branch         = "main"
