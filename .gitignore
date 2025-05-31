@@ -54,6 +54,7 @@ build/
 **/.terraform
 terraform.tfstate
 secrets.auto.tfvars
+terraform.tfvars
 
 ########################################################
 #  **Important** — keep the Maven wrapper
