@@ -36,6 +36,35 @@ resource "digitalocean_app" "helpstudyme" {
       source_dir        = "frontend/ap-question-generator"
       error_document    = "index.html"
       
+      env {
+        key   = "REACT_APP_FIREBASE_API_KEY"
+        value = var.firebase_api_key
+      }
+      env {
+        key   = "REACT_APP_FIREBASE_AUTH_DOMAIN"
+        value = var.firebase_auth_domain
+      }
+      env {
+        key   = "REACT_APP_FIREBASE_PROJECT_ID"
+        value = var.firebase_project_id
+      }
+      env {
+        key   = "REACT_APP_FIREBASE_STORAGE_BUCKET"
+        value = var.firebase_storage_bucket
+      }
+      env {
+        key   = "REACT_APP_FIREBASE_MESSAGING_SENDER_ID"
+        value = var.firebase_messaging_sender_id
+      }
+      env {
+        key   = "REACT_APP_FIREBASE_APP_ID"
+        value = var.firebase_app_id
+      }
+      env {
+        key   = "REACT_APP_API_BASE"
+        value = "https://helpstudy.me/api"
+      }
+      
       github {
         repo           = "liamkernan/HELPSTUDY.ME"
         branch         = "main"

@@ -17,6 +17,12 @@ terraform {
 variable "do_token" {}
 variable "pvt_key" {}
 variable "openai_api_key" {}
+variable "firebase_api_key" {}
+variable "firebase_auth_domain" {}
+variable "firebase_project_id" {}
+variable "firebase_storage_bucket" {}
+variable "firebase_messaging_sender_id" {}
+variable "firebase_app_id" {}
 
 provider "digitalocean" {
   token = var.do_token
