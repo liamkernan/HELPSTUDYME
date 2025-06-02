@@ -62,3 +62,4 @@ terraform.tfvars
 !.mvn/wrapper/**
 /frontend/ap-question-generator/.claude/
 /.claude/
+/.idea/
