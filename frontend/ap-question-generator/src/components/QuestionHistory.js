@@ -32,10 +32,8 @@ const parsePrompt = (raw = "", correctLetter = null) => {
 const getCleanSubjectName = (subject = "") => {
     if (!subject) return 'General';
     
-    // Remove emojis and extra characters, but keep spaces
     const cleanSubject = subject.replace(/[^\w\s]/g, '').trim();
     
-    // Return the clean subject name without emojis
     return cleanSubject || 'General';
 };
 
@@ -141,8 +139,8 @@ function QuestionHistory({ onBackToMenu }) {
                         Below you can find a full list of your Multiple Choice and Free-Response questions.
                     </p>
                     <p className="text-sm text-white mt-3 italic">
-                        <span className="text-green-500 font-bold">Green</span> = your choice was correct;{" "}
-                        <span className="text-red-500 font-bold">Red</span> = your choice was incorrect
+                        <span className="text-green-500 font-bold">Green</span> = correct choice;{" "}
+                        <span className="text-red-500 font-bold">Red</span> = incorrect choice
                     </p>
                 </div>
                 <button

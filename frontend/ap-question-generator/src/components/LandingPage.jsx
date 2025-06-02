@@ -87,13 +87,13 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
                     {onViewHistory && (
                         <button
                             onClick={onViewHistory}
-                            className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-2xl font-semibold transition"
+                            className="px-6 py-3 bg-white/20 hover:bg-white/30 rounded-2xl font-semibold transition"
                         >View Question History</button>
                     )}
 
                     <button
                         onClick={onAbout}
-                        className="px-6 py-3 bg-pink-600/35 hover:bg-pink-500/70 rounded-2xl font-semibold transition"
+                        className="px-6 py-3 bg-pink-500/45 hover:bg-pink-500/70 rounded-2xl font-semibold transition"
                     >About this Project</button>
                 </div>
             </div>

@@ -27,7 +27,7 @@ export default function About({ onBack }) {
                     you want to master, but also provide feedback on Free Response writing, and offer studying priorites based on multiple choice responses and accuracy.
                 </p>
                 <p className={"mb-20"}>
-                    Created by Liam Kernan as a portfolio piece and a way to help fellow
+                    Created by Liam Kernan as a way to help fellow
                     students study not just <b>harder</b>, but <b>smarter</b>.
                 </p>
                 <a
