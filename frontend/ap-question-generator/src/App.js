@@ -147,8 +147,20 @@ export default function App() {
             }
         }
         
-        console.warn("Could not find correct answer marker in question:", clean.substring(0, 100));
-        return { processedText: clean.replace(/\*\*\*/g, ""), correctAnswerLetter: "A" }; // fallback to A
+        console.error("Could not find correct answer marker in question:", clean.substring(0, 200));
+        console.error("Full question text:", clean);
+        
+        // Try to find any option and randomize instead of defaulting to A
+        const optionLetters = ['A', 'B', 'C', 'D'];
+        const availableOptions = optionLetters.filter(letter => 
+            clean.match(new RegExp(`^${letter}[.)]`, 'm'))
+        );
+        
+        const fallbackAnswer = availableOptions.length > 0 ? 
+            availableOptions[Math.floor(Math.random() * availableOptions.length)] : 'A';
+            
+        console.warn(`Using random fallback answer: ${fallbackAnswer}`);
+        return { processedText: clean.replace(/\*\*\*/g, ""), correctAnswerLetter: fallbackAnswer };
     };
 
     const fetchQuestion = async (subject, questionType) => {
