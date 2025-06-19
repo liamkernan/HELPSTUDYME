@@ -56,7 +56,7 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
             </div>
 
             <div className="max-w-5xl text-center space-y-10">
-                <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight">
+                <h1 className="text-3xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight leading-tight whitespace-nowrap">
                     Master&nbsp;
                     <span
                         className={[

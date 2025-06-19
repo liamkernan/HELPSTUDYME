@@ -406,7 +406,6 @@ export default function App() {
             case "history":
                 return (
                     <>
-                        <Header onBack={() => navigate("landing")} />
                         <main className="flex-grow container mx-auto p-4">
                             <QuestionHistory onBackToMenu={() => navigate("select")}/>
                         </main>

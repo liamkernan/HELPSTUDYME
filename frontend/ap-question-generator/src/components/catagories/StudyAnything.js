@@ -30,12 +30,15 @@ export default function StudyAnything({
     return (
         <div className="animated-gradient-all min-h-screen flex flex-col bg-blue-950 text-gray-100">
             <div className="container mx-auto p-6 flex flex-col items-start">
-                <button
-                    onClick={onBack}
-                    className="underline text-teal-400 hover:text-teal-200 mb-4"
-                >
-                    ← Back Home
-                </button>
+                <div className="absolute top-4 left-4">
+                    <button
+                        onClick={onBack}
+                        className="flex items-center space-x-2 bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-full shadow-lg backdrop-blur transition"
+                    >
+                        <ArrowLeft className="w-4 h-4" />
+                        <span className="text-sm font-medium">Home</span>
+                    </button>
+                </div>
 
                 <h1 className={headerClass}>STUDY ANYTHING</h1>
 
