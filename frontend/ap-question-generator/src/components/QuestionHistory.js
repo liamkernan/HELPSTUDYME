@@ -134,11 +134,8 @@ function QuestionHistory({ onBackToMenu }) {
         <div id="history-container" className="p-6">
             <div className="flex items-center justify-between mb-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-white">Question History</h1>
-                    <p className="text-sm italic text-gray-300 mt-1">
-                        Below you can find a full list of your Multiple Choice and Free-Response questions.
-                    </p>
-                    <p className="text-sm text-white mt-3 italic">
+                    <h1 className="text-4xl font-bold mb-3 mt-4 text-white">Question History</h1>
+                    <p className="text-sm text-white mt-6 mb-3 italic">
                         <span className="text-green-500 font-bold">Green</span> = correct choice;{" "}
                         <span className="text-red-500 font-bold">Red</span> = incorrect choice
                     </p>
