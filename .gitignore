@@ -63,3 +63,4 @@ terraform.tfvars
 /frontend/ap-question-generator/.claude/
 /.claude/
 /.idea/
+terraform.tfvars
