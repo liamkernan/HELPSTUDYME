@@ -76,6 +76,12 @@ public class QuestionController {
             @Pattern(regexp = "^.+$") String subject,
             Authentication authentication) {
         
+        logger.info("Received guide request for subject: '{}' (length: {})", subject, subject.length());
+        
+        // Replace underscores with spaces for better readability
+        String processedSubject = subject.replace("_", " ");
+        logger.info("Processed subject: '{}'", processedSubject);
+        
         FirebaseUserPrincipal user = (FirebaseUserPrincipal) authentication.getPrincipal();
         String userId = user.getUid();
         
@@ -87,14 +93,14 @@ public class QuestionController {
         }
         
         try {
-            String prompt = getPromptForGuide(subject);
+            String prompt = getPromptForGuide(processedSubject);
             String guide = openAIService.generateGuide(prompt);
             
-            logger.info("Generated guide for user: {} subject: {}", userId, subject);
+            logger.info("Generated guide for user: {} subject: {}", userId, processedSubject);
             return ResponseEntity.ok(guide);
             
         } catch (Exception e) {
-            logger.error("Error generating guide for user: {} subject: {}", userId, subject, e);
+            logger.error("Error generating guide for user: {} subject: {}", userId, processedSubject, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Map.of("error", "Failed to generate guide"));
         }
