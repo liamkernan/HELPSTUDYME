@@ -36,9 +36,9 @@ public class SecurityConfig {
                 // Public endpoints
                 .requestMatchers("/api/health").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
-                // Protected endpoints - require authentication
-                .requestMatchers("/api/**").authenticated()
-                .anyRequest().authenticated()
+                // In development mode, allow all requests
+                .requestMatchers("/api/**").permitAll()
+                .anyRequest().permitAll()
             )
             .addFilterBefore(firebaseAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

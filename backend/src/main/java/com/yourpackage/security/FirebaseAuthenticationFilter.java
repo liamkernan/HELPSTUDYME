@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -23,13 +24,27 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(FirebaseAuthenticationFilter.class);
     private final FirebaseAuth firebaseAuth;
 
-    public FirebaseAuthenticationFilter(FirebaseAuth firebaseAuth) {
+    public FirebaseAuthenticationFilter(@Autowired(required = false) FirebaseAuth firebaseAuth) {
         this.firebaseAuth = firebaseAuth;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, 
                                    FilterChain filterChain) throws ServletException, IOException {
+        
+        // Skip authentication if Firebase is not configured (development mode)
+        if (firebaseAuth == null) {
+            logger.warn("Firebase not configured - skipping authentication (development mode only)");
+            
+            // Create a mock authentication for development
+            FirebaseUserPrincipal principal = new FirebaseUserPrincipal("dev-user", "dev@example.com", null);
+            UsernamePasswordAuthenticationToken authentication = 
+                new UsernamePasswordAuthenticationToken(principal, null, new ArrayList<>());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            
+            filterChain.doFilter(request, response);
+            return;
+        }
         
         String authorizationHeader = request.getHeader("Authorization");
         

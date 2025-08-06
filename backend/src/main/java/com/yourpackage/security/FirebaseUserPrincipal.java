@@ -12,7 +12,7 @@ public class FirebaseUserPrincipal implements Principal {
     public FirebaseUserPrincipal(String uid, String email, FirebaseToken token) {
         this.uid = uid;
         this.email = email;
-        this.token = token;
+        this.token = token; // Can be null in development mode
     }
 
     @Override
