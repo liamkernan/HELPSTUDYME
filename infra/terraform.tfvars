@@ -1,3 +1,0 @@
-do_token   = "dop_v1_485da43041dfa73f2c61288b023da538da94ae0580edd7f1836fd9cd157d9095"
-pvt_key    = "/Users/liamkernan/.ssh/id_ed25519"
-openai_api_key = "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"

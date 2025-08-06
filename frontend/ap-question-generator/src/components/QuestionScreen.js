@@ -1,26 +1,62 @@
 import React, { useState } from 'react';
 import { InlineMath, BlockMath } from 'react-katex';
 import { ArrowPathIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import 'katex/dist/katex.min.css';
 import Notepad from './Notepad';
 
-/* ── Inline / display LaTeX splitter ───────────────────────────── */
-function MathRenderer({ text }) {
-    const regex = /\\\[(.+?)\\\]|\\\((.+?)\\\)/gs;
-    const parts = [];
-    let last = 0, m;
+/* ── Enhanced renderer for both math and code formatting ───────────────────────────── */
+function EnhancedRenderer({ text }) {
+    // Check if text contains markdown code blocks or inline code
+    const hasCodeFormatting = /```|`/.test(text);
+    
+    if (hasCodeFormatting) {
+        // Use ReactMarkdown for text with code formatting
+        return (
+            <ReactMarkdown
+                children={text}
+                remarkPlugins={[remarkGfm, remarkMath]}
+                rehypePlugins={[rehypeKatex]}
+                components={{
+                    // Ensure proper styling for code blocks
+                    code: ({node, inline, className, children, ...props}) => {
+                        return inline ? (
+                            <code className="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono" {...props}>
+                                {children}
+                            </code>
+                        ) : (
+                            <pre className="bg-gray-100 p-3 rounded-lg overflow-x-auto">
+                                <code className="text-sm font-mono" {...props}>
+                                    {children}
+                                </code>
+                            </pre>
+                        );
+                    }
+                }}
+            />
+        );
+    } else {
+        // Use original LaTeX-only renderer for backward compatibility
+        const regex = /\\\[(.+?)\\\]|\\\((.+?)\\\)/gs;
+        const parts = [];
+        let last = 0, m;
 
-    while ((m = regex.exec(text)) !== null) {
-        if (m.index > last) parts.push({ type: 'text',    content: text.slice(last, m.index) });
-        parts.push({ type: m[1] ? 'display' : 'inline',   content: (m[1] || m[2]).trim() });
-        last = m.index + m[0].length;
+        while ((m = regex.exec(text)) !== null) {
+            if (m.index > last) parts.push({ type: 'text', content: text.slice(last, m.index) });
+            parts.push({ type: m[1] ? 'display' : 'inline', content: (m[1] || m[2]).trim() });
+            last = m.index + m[0].length;
+        }
+        if (last < text.length) parts.push({ type: 'text', content: text.slice(last) });
+
+        return parts.map((p, i) =>
+            p.type === 'display' ? <BlockMath key={i} math={p.content} /> :
+                p.type === 'inline' ? <InlineMath key={i} math={p.content} /> :
+                    <span key={i}>{p.content}</span>
+        );
     }
-    if (last < text.length) parts.push({ type: 'text', content: text.slice(last) });
-
-    return parts.map((p, i) =>
-        p.type === 'display' ? <BlockMath key={i} math={p.content} /> :
-            p.type === 'inline'  ? <InlineMath key={i} math={p.content} /> :
-                <span      key={i}>{p.content}</span>
-    );
 }
 
 /* ── Main component ────────────────────────────────────────────── */
@@ -89,7 +125,7 @@ export default function QuestionScreen({
                     <div className="bg-white p-6 rounded-lg shadow-md lg:col-span-2">
                         {/* Prompt */}
                         <div className="question-text mb-6">
-                            <MathRenderer text={promptText} />
+                            <EnhancedRenderer text={promptText} />
                         </div>
 
                         {/* Options */}
@@ -106,7 +142,7 @@ export default function QuestionScreen({
                                 >
                                     <div className="flex">
                                         <span className="font-bold mr-2">{opt.letter})</span>
-                                        <MathRenderer text={opt.text} />
+                                        <EnhancedRenderer text={opt.text} />
                                     </div>
                                 </div>
                             ))}
