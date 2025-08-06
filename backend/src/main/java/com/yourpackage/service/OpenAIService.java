@@ -248,7 +248,7 @@ public class OpenAIService {
         try {
             String systemPrompt;
                 systemPrompt = "You are an expert tutor on the topic the student is prompting you about. Provide a concise explanation the topic the student is asking about at the quality of a master tutor. Only provide the guide; no extra dialogue";
-                creditdiff = 1500;  // Increased from 700 but not too high
+                creditdiff = 700;
                 model = "gpt-4.1";
 
 
