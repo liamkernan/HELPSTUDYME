@@ -247,17 +247,17 @@ public class OpenAIService {
         String model;
         try {
             String systemPrompt;
-                systemPrompt = "You are an expert tutor on the topic the student is prompting you about. Provide a comprehensive yet focused explanation of the topic at the quality of a master tutor. Structure your response clearly with key concepts, examples, and practical applications. Only provide the guide; no extra dialogue";
-                creditdiff = 2000;  // Increased from 700 to handle complex topics
-                model = "gpt-4.1-mini";  // Faster model for better performance
+                systemPrompt = "You are an expert tutor on the topic the student is prompting you about. Provide a concise explanation the topic the student is asking about at the quality of a master tutor. Only provide the guide; no extra dialogue";
+                creditdiff = 1500;  // Increased from 700 but not too high
+                model = "gpt-4.1";
 
 
             var chatRequest = ChatRequest.builder()
                     .model(model)
                     .message(ChatMessage.SystemMessage.of(systemPrompt))
                     .message(ChatMessage.UserMessage.of(prompt))
-                    .temperature(0.7)  // Higher temperature for more comprehensive explanations
-                    .topP(0.9)         // Higher topP for better coverage of complex topics
+                    .temperature(0.3)
+                    .topP(0.5)
                     .maxCompletionTokens(creditdiff)
                     .build();
 
