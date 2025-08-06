@@ -8,7 +8,7 @@ public class QuestionRequest {
     
     @NotBlank(message = "Subject is required")
     @Size(min = 2, max = 100, message = "Subject must be between 2 and 100 characters")
-    @Pattern(regexp = "^[a-zA-Z0-9\\s\\-_.]+$", message = "Subject contains invalid characters")
+    @Pattern(regexp = "^[a-zA-Z0-9\\s\\-_.()]+$", message = "Subject contains invalid characters")
     private String subject;
     
     @Pattern(regexp = "^(multiple-choice|free-response)$", message = "Type must be 'multiple-choice' or 'free-response'")
