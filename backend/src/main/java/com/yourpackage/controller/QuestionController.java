@@ -39,10 +39,12 @@ public class QuestionController {
 
     @GetMapping("/question/{subject}")
     public ResponseEntity<?> generateQuestion(
-            @PathVariable @Size(min = 2, max = 100) @Pattern(regexp = "^[a-zA-Z0-9\\s\\-_.()]+$") String subject,
+            @PathVariable @Size(min = 2, max = 100) @Pattern(regexp = "^.+$") String subject,
             @RequestParam(required = false, defaultValue = "multiple-choice") 
             @Pattern(regexp = "^(multiple-choice|free-response)$") String type,
             Authentication authentication) {
+        
+        logger.info("Received request for subject: '{}' (length: {}) type: '{}'", subject, subject.length(), type);
         
         FirebaseUserPrincipal user = (FirebaseUserPrincipal) authentication.getPrincipal();
         String userId = user.getUid();
@@ -71,7 +73,7 @@ public class QuestionController {
     @GetMapping("/guide")
     public ResponseEntity<?> generateGuide(
             @RequestParam("subject") @Size(min = 2, max = 100) 
-            @Pattern(regexp = "^[a-zA-Z0-9\\s\\-_.()]+$") String subject,
+            @Pattern(regexp = "^.+$") String subject,
             Authentication authentication) {
         
         FirebaseUserPrincipal user = (FirebaseUserPrincipal) authentication.getPrincipal();
@@ -147,7 +149,7 @@ public class QuestionController {
     @GetMapping("/memory/{subject}")
     public ResponseEntity<List<String>> getSubjectMemory(
             @PathVariable @Size(min = 2, max = 100) 
-            @Pattern(regexp = "^[a-zA-Z0-9\\s\\-_.()]+$") String subject,
+            @Pattern(regexp = "^.+$") String subject,
             Authentication authentication) {
         
         FirebaseUserPrincipal user = (FirebaseUserPrincipal) authentication.getPrincipal();
@@ -173,7 +175,7 @@ public class QuestionController {
     @DeleteMapping("/memory/{subject}")
     public ResponseEntity<Void> clearSubjectMemory(
             @PathVariable @Size(min = 2, max = 100) 
-            @Pattern(regexp = "^[a-zA-Z0-9\\s\\-_.()]+$") String subject,
+            @Pattern(regexp = "^.+$") String subject,
             Authentication authentication) {
         
         FirebaseUserPrincipal user = (FirebaseUserPrincipal) authentication.getPrincipal();
