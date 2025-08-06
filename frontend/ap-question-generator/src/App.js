@@ -18,18 +18,20 @@ import ActSelector          from "./components/catagories/ActSelector";
 import StudyAnything        from "./components/catagories/StudyAnything";
 import StudyMaterial        from "./components/StudyMaterial";
 
-import { AuthProvider } from "./AuthContext";
+import { AuthProvider, useAuth } from "./AuthContext";
 import { logQuestion }  from "./history";
+import { apiGet, apiPost } from "./utils/api";
 
 const API_BASE = process.env.REACT_APP_API_BASE;
 
-export default function App() {
+function AppContent() {
+    const { user, loading } = useAuth();
     const [currentPage, setCurrentPage] = useState("landing");
     const [activeSubject, setActiveSubject] = useState(null);
     const [question,      setQuestion]      = useState("");
     const [selectedAnswer,setSelectedAnswer]= useState(null);
     const [correctAnswer, setCorrectAnswer] = useState(null);
-    const [loading,       setLoading]       = useState(false);
+    const [apiLoading,    setApiLoading]    = useState(false);
     const [showFeedback,  setShowFeedback]  = useState(false);
     const [answerSubmitted,setAnswerSubmitted] = useState(false);
     const [feedbackData,  setFeedbackData]  = useState(null);
@@ -164,8 +166,13 @@ export default function App() {
     };
 
     const fetchQuestion = async (subject, questionType) => {
+        if (!user) {
+            alert('Please sign in to generate questions');
+            return;
+        }
+
         setActiveSubject(subject);
-        setLoading(true);
+        setApiLoading(true);
         setQuestion("");
         setSelectedAnswer(null);
         setCorrectAnswer(null);
@@ -180,9 +187,8 @@ export default function App() {
         }
 
         try {
-            const url = `${API_BASE}/question/${encodeURIComponent(subject)}?type=${questionType}`;
-            const res = await fetch(url);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const url = `/question/${encodeURIComponent(subject)}?type=${questionType}`;
+            const res = await apiGet(url);
             const raw = await res.text();
 
             if (questionType === "multiple-choice") {
@@ -194,28 +200,34 @@ export default function App() {
             }
         } catch (err) {
             console.error("fetchQuestion:", err);
+            alert(`Failed to generate question: ${err.message}`);
         } finally {
-            setLoading(false);
+            setApiLoading(false);
         }
     };
 
     const fetchGuide = async (subject) => {
+        if (!user) {
+            alert('Please sign in to generate study guides');
+            return;
+        }
+
         setActiveSubject(subject);
-        setLoading(true);
+        setApiLoading(true);
         setQuestion("");
 
         navigate("studymaterial", { subject });
 
         try {
-            const url = `${API_BASE}/guide?subject=${encodeURIComponent(subject)}`;
-            const res = await fetch(url);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const url = `/guide?subject=${encodeURIComponent(subject)}`;
+            const res = await apiGet(url);
             const raw = await res.text();
             setQuestion(raw);
         } catch (err) {
             console.error("fetchGuide:", err);
+            alert(`Failed to generate guide: ${err.message}`);
         } finally {
-            setLoading(false);
+            setApiLoading(false);
         }
     };
 
@@ -234,13 +246,17 @@ export default function App() {
     };
 
     const handleSubmitFreeResponse = async (responseText) => {
+        if (!user) {
+            alert('Please sign in to submit responses');
+            return;
+        }
+
         try {
-            const res = await fetch(`${API_BASE}/evaluate`, {
-                method:  "POST",
-                headers: { "Content-Type": "application/json" },
-                body:    JSON.stringify({ subject: activeSubject, question, response: responseText }),
+            const res = await apiPost('/evaluate', { 
+                subject: activeSubject, 
+                question, 
+                response: responseText 
             });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
             const evalData = await res.json();
             setFeedbackData(evalData);
@@ -256,7 +272,7 @@ export default function App() {
         } catch (err) {
             console.error("handleSubmitFreeResponse:", err);
             setFeedbackData({
-                feedback: "An error occurred while evaluating your response. Please try again.",
+                feedback: `Error evaluating response: ${err.message}`,
                 score: "N/A",
                 maxScore: "9",
                 scoreExplanation: "Could not evaluate due to an error.",
@@ -352,7 +368,7 @@ export default function App() {
                         <main className="flex-grow container mx-auto p-4">
                             <QuestionScreen
                                 question={question}
-                                loading={loading}
+                                loading={apiLoading}
                                 activeSubject={activeSubject}
                                 selectedAnswer={selectedAnswer}
                                 setSelectedAnswer={setSelectedAnswer}
@@ -375,7 +391,7 @@ export default function App() {
                         <main className="flex-grow container mx-auto p-4">
                             <FreeResponseScreen
                                 question={question}
-                                loading={loading}
+                                loading={apiLoading}
                                 activeSubject={activeSubject}
                                 onSubmitResponse={handleSubmitFreeResponse}
                                 onNewQuestion={() => fetchQuestion(activeSubject, "free-response")}
@@ -394,7 +410,7 @@ export default function App() {
                         <main className="flex-grow container mx-auto p-4">
                             <StudyMaterial
                                 question={question}
-                                loading={loading}
+                                loading={apiLoading}
                                 activeSubject={activeSubject}
                                 onBackToMenu={() => navigate("select")}
                             />
@@ -424,11 +440,25 @@ export default function App() {
         }
     };
 
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-blue-950">
+                <div className="text-white text-xl">Loading...</div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen flex flex-col bg-blue-950">
+            {renderPage()}
+        </div>
+    );
+}
+
+export default function App() {
     return (
         <AuthProvider>
-            <div className="min-h-screen flex flex-col bg-blue-950">
-                {renderPage()}
-            </div>
+            <AppContent />
         </AuthProvider>
     );
 }

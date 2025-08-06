@@ -1,0 +1,13 @@
+# Example terraform variables file
+# Copy this to terraform.tfvars and fill in your actual values
+# NEVER commit terraform.tfvars to version control
+
+do_token = "your_digitalocean_token_here"
+pvt_key = "/path/to/your/private/key"
+openai_api_key = "your_openai_api_key_here"
+firebase_api_key = "your_firebase_api_key_here"
+firebase_auth_domain = "your_project.firebaseapp.com"
+firebase_project_id = "your_project_id"
+firebase_storage_bucket = "your_project.appspot.com"
+firebase_messaging_sender_id = "your_sender_id"
+firebase_app_id = "your_app_id"

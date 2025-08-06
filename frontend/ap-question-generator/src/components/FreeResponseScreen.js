@@ -2,34 +2,69 @@
 import React, { useState, useMemo } from 'react';
 import { InlineMath, BlockMath } from 'react-katex';
 import { ArrowPathIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 import Notepad from './Notepad';
 
-/* ── Math renderer ─────────────────────────────────────────────────── */
-function MathRenderer({ text }) {
-    const regex = /\\\[(.+?)\\\]|\\\((.+?)\\\)/gs;
-    const parts = [];
-    let lastIndex = 0;
-    let match;
-    while ((match = regex.exec(text)) !== null) {
-        if (match.index > lastIndex) {
-            parts.push({ type: 'text', content: text.slice(lastIndex, match.index) });
+/* ── Enhanced renderer for both math and code formatting ─────────────────────────────────────────────────── */
+function EnhancedRenderer({ text }) {
+    // Check if text contains markdown code blocks or inline code
+    const hasCodeFormatting = /```|`/.test(text);
+    
+    if (hasCodeFormatting) {
+        // Use ReactMarkdown for text with code formatting
+        return (
+            <ReactMarkdown
+                children={text}
+                remarkPlugins={[remarkGfm, remarkMath]}
+                rehypePlugins={[rehypeKatex]}
+                components={{
+                    // Ensure proper styling for code blocks
+                    code: ({node, inline, className, children, ...props}) => {
+                        return inline ? (
+                            <code className="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono" {...props}>
+                                {children}
+                            </code>
+                        ) : (
+                            <pre className="bg-gray-100 p-3 rounded-lg overflow-x-auto">
+                                <code className="text-sm font-mono" {...props}>
+                                    {children}
+                                </code>
+                            </pre>
+                        );
+                    }
+                }}
+            />
+        );
+    } else {
+        // Use original LaTeX-only renderer for backward compatibility
+        const regex = /\\\[(.+?)\\\]|\\\((.+?)\\\)/gs;
+        const parts = [];
+        let lastIndex = 0;
+        let match;
+        while ((match = regex.exec(text)) !== null) {
+            if (match.index > lastIndex) {
+                parts.push({ type: 'text', content: text.slice(lastIndex, match.index) });
+            }
+            if (match[1] != null) {
+                parts.push({ type: 'display', content: match[1].trim() });
+            } else {
+                parts.push({ type: 'inline', content: match[2].trim() });
+            }
+            lastIndex = match.index + match[0].length;
         }
-        if (match[1] != null) {
-            parts.push({ type: 'display', content: match[1].trim() });
-        } else {
-            parts.push({ type: 'inline', content: match[2].trim() });
+        if (lastIndex < text.length) {
+            parts.push({ type: 'text', content: text.slice(lastIndex) });
         }
-        lastIndex = match.index + match[0].length;
+        return parts.map((part, i) => {
+            if (part.type === 'display') return <BlockMath key={i} math={part.content} />;
+            if (part.type === 'inline') return <InlineMath key={i} math={part.content} />;
+            return <span key={i}>{part.content}</span>;
+        });
     }
-    if (lastIndex < text.length) {
-        parts.push({ type: 'text', content: text.slice(lastIndex) });
-    }
-    return parts.map((part, i) => {
-        if (part.type === 'display') return <BlockMath key={i} math={part.content} />;
-        if (part.type === 'inline') return <InlineMath key={i} math={part.content} />;
-        return <span key={i}>{part.content}</span>;
-    });
 }
 
 /* ── Main screen ───────────────────────────────────────────────────── */
@@ -102,7 +137,7 @@ export default function FreeResponseScreen({
                     <div className="bg-white p-6 rounded-lg shadow-md flex flex-col min-h-0">
                         {questionBlocks.map((block, idx) => (
                             <div key={idx} className="question-text mb-6">
-                                <MathRenderer text={block} />
+                                <EnhancedRenderer text={block} />
                             </div>
                         ))}
                         {!feedbackData ? (
@@ -139,7 +174,7 @@ export default function FreeResponseScreen({
                                 <div className="user-response p-3 bg-gray-50 rounded-lg mb-5">
                                     {responseBlocks.map((block, idx) => (
                                         <div key={idx} className="mb-4">
-                                            <MathRenderer text={block} />
+                                            <EnhancedRenderer text={block} />
                                         </div>
                                     ))}
                                 </div>
@@ -147,7 +182,7 @@ export default function FreeResponseScreen({
                                 <div className="feedback p-4 bg-blue-50 border border-blue-200 rounded-lg mb-5">
                                     {feedbackBlocks.map((block, idx) => (
                                         <div key={idx} className="mb-4">
-                                            <MathRenderer text={block} />
+                                            <EnhancedRenderer text={block} />
                                         </div>
                                     ))}
                                 </div>
