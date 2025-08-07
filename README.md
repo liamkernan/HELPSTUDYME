@@ -35,8 +35,8 @@
 
 <h2 className="text-3xl font-bold mt-10 mb-4">Features</h2>
 <ul className="list-disc list-inside mb-9">
-  <li>Generate multiple‑choice and free‑response questions on-demand</li>
-  <li>Render complex math expressions with KaTeX</li>
+  <li>Generate multiple‑choice & free‑response questions on-demand, along with comprehensive study guides on <i>any</i> topic</li>
+  <li>Render complex math expressions & code scripts with KaTeX</li>
   <li>Responsive, modern UI styled with Tailwind CSS</li>
   <li>Authentication, user data, and real‑time updates via Firebase</li>
   <li>simple-openAI API proxy for prompt management</li>
