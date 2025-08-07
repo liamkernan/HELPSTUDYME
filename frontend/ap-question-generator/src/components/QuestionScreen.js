@@ -128,6 +128,18 @@ export default function QuestionScreen({
                             <EnhancedRenderer text={promptText} />
                         </div>
 
+                        {showFeedback && (
+                            <div className={`mt-6 mb-6 p-4 rounded-lg
+                ${selectedAnswer === correctAnswer
+                                ? 'bg-green-50 border border-green-200'
+                                : 'bg-red-50 border border-red-200'}`}>
+                                <h3 className="font-bold">
+                                    {selectedAnswer === correctAnswer ? 'Correct!' : 'Incorrect'}
+                                </h3>
+                                <p>The correct answer is {correctAnswer}.</p>
+                            </div>
+                        )}
+
                         {/* Options */}
                         <div className="options-container">
                             {options.map(opt => (
@@ -172,17 +184,7 @@ export default function QuestionScreen({
                         </div>
 
                         {/* Feedback */}
-                        {showFeedback && (
-                            <div className={`mt-6 p-4 rounded-lg
-                ${selectedAnswer === correctAnswer
-                                ? 'bg-green-50 border border-green-200'
-                                : 'bg-red-50 border border-red-200'}`}>
-                                <h3 className="font-bold">
-                                    {selectedAnswer === correctAnswer ? 'Correct!' : 'Incorrect'}
-                                </h3>
-                                <p>The correct answer is {correctAnswer}.</p>
-                            </div>
-                        )}
+
                     </div>
 
                     {/* Notepad column (1/3 width on lg) */}
