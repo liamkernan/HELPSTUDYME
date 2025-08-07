@@ -24,7 +24,7 @@
   <li>Install client dependencies:<br/><code>cd HELPSTUDYME/client && npm install</code></li>
   <li>Build server:<br/><code>cd ../server && mvn clean install</code></li>
   <li>Create environment variables:<br/><code>OPENAI_API_KEY</code>, <code>REACT_APP_FIREBASE_API_KEY</code>, <code>REACT_APP_API_BASE</code> in <code>.env</code> files</li>
-  <li>Start frontend:<br/><code>cd frontend, npm start</code> (in <code>/client</code>)</li>
+  <li>Start frontend:<br/><code>cd frontend/ap-question-generator, npm start</code> (in <code>/client</code>)</li>
   <li>Start backend:<br/><code>cd backend, mvn spring-boot:run</code> (in <code>/server</code>)</li>
 </ol>
 
