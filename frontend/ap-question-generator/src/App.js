@@ -22,10 +22,9 @@ import { AuthProvider, useAuth } from "./AuthContext";
 import { logQuestion }  from "./history";
 import { apiGet, apiPost } from "./utils/api";
 
-const API_BASE = process.env.REACT_APP_API_BASE;
 
 function AppContent() {
-    const { user, loading } = useAuth();
+    const { loading } = useAuth();
     const [currentPage, setCurrentPage] = useState("landing");
     const [activeSubject, setActiveSubject] = useState(null);
     const [question,      setQuestion]      = useState("");
@@ -166,10 +165,6 @@ function AppContent() {
     };
 
     const fetchQuestion = async (subject, questionType) => {
-        if (!user) {
-            alert('Please sign in to generate questions');
-            return;
-        }
 
         setActiveSubject(subject);
         setApiLoading(true);
@@ -207,10 +202,6 @@ function AppContent() {
     };
 
     const fetchGuide = async (subject) => {
-        if (!user) {
-            alert('Please sign in to generate study guides');
-            return;
-        }
 
         setActiveSubject(subject);
         setApiLoading(true);
@@ -246,10 +237,6 @@ function AppContent() {
     };
 
     const handleSubmitFreeResponse = async (responseText) => {
-        if (!user) {
-            alert('Please sign in to submit responses');
-            return;
-        }
 
         try {
             const res = await apiPost('/evaluate', { 

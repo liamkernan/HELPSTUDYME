@@ -54,7 +54,7 @@ export default function StudyAnything({
                         }
                         className="
               flex-1
-              bg-white/20 text-white placeholder-gray-200 font-semibold
+              bg-white/20 text-white placeholder-gray-100 font-semibold
               px-6 py-4
               rounded-3xl
               backdrop-blur-md

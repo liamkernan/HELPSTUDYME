@@ -46,8 +46,7 @@ public class QuestionController {
         
         logger.info("Received request for subject: '{}' (length: {}) type: '{}'", subject, subject.length(), type);
         
-        FirebaseUserPrincipal user = (FirebaseUserPrincipal) authentication.getPrincipal();
-        String userId = user.getUid();
+        String userId = getUserId(authentication);
         
         // Rate limiting check
         if (!rateLimitingService.isQuestionRequestAllowed(userId)) {
@@ -78,8 +77,7 @@ public class QuestionController {
         
         logger.info("Received guide request for subject: '{}' (length: {})", subject, subject.length());
         
-        FirebaseUserPrincipal user = (FirebaseUserPrincipal) authentication.getPrincipal();
-        String userId = user.getUid();
+        String userId = getUserId(authentication);
         
         // Use question rate limit for guides as well
         if (!rateLimitingService.isQuestionRequestAllowed(userId)) {
@@ -120,8 +118,7 @@ public class QuestionController {
     public ResponseEntity<?> evaluateResponse(@Valid @RequestBody EvaluationRequest request,
                                              Authentication authentication) {
         
-        FirebaseUserPrincipal user = (FirebaseUserPrincipal) authentication.getPrincipal();
-        String userId = user.getUid();
+        String userId = getUserId(authentication);
         
         // Rate limiting check for evaluations
         if (!rateLimitingService.isEvaluationRequestAllowed(userId)) {
@@ -154,8 +151,7 @@ public class QuestionController {
             @Pattern(regexp = "^.+$") String subject,
             Authentication authentication) {
         
-        FirebaseUserPrincipal user = (FirebaseUserPrincipal) authentication.getPrincipal();
-        String userId = user.getUid();
+        String userId = getUserId(authentication);
         
         try {
             List<String> recentTopics = memoryService.getRecentTopics(subject);
@@ -180,8 +176,7 @@ public class QuestionController {
             @Pattern(regexp = "^.+$") String subject,
             Authentication authentication) {
         
-        FirebaseUserPrincipal user = (FirebaseUserPrincipal) authentication.getPrincipal();
-        String userId = user.getUid();
+        String userId = getUserId(authentication);
         
         try {
             memoryService.clearMemory(subject);
@@ -210,5 +205,20 @@ public class QuestionController {
         String base = "Create a study guide for " + subject + ".";
 
         return base;
+    }
+    
+    private String getUserId(Authentication authentication) {
+        if (authentication == null || authentication.getPrincipal() == null) {
+            // Generate anonymous user ID based on IP or session - for now use "anonymous"
+            return "anonymous";
+        }
+        
+        try {
+            FirebaseUserPrincipal user = (FirebaseUserPrincipal) authentication.getPrincipal();
+            return user.getUid();
+        } catch (ClassCastException e) {
+            // Handle development mode or other authentication types
+            return "anonymous";
+        }
     }
 }
