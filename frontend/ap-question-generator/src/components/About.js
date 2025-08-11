@@ -23,8 +23,8 @@ export default function About({ onBack }) {
                 <p className="mb-9">
                     Under the hood, it’s a React front-end with KaTeX for beautiful
                     math rendering, talking to a back-end that proxies to OpenAI’s
-                    API to not only craft questions across AP, SAT, ACT, and any other “quiz”
-                    you want to master, but also provide feedback on Free Response writing, and offer studying priorites based on multiple choice responses and accuracy.
+                    API to craft questions across AP, SAT, ACT, and any other “quiz”
+                    you want to master. It also provide feedback on Free Response writing, custom study guides for any topic of the users choice, and advice on studying priorities based on question performance.
                 </p>
                 <p className={"mb-20"}>
                     Created by Liam Kernan as a way to help fellow

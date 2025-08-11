@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { InlineMath, BlockMath } from 'react-katex';
-import { ArrowPathIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
+import { ArrowPathIcon, DocumentTextIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
@@ -97,7 +97,7 @@ export default function QuestionScreen({
                     <button
                         onClick={() => setShowNotepad(v => !v)}
                         className={`flex items-center space-x-2 px-3 py-1 rounded-full shadow-lg backdrop-blur transition
-              ${showNotepad ? 'bg-blue-500 hover:bg-blue-600 text-white'
+              ${showNotepad ? 'bg-blue-600 hover:bg-blue-700 text-white'
                             : 'bg-white/20 hover:bg-white/30 text-white'}`}
                     >
                         <DocumentTextIcon className="h-4 w-4" />
@@ -133,10 +133,19 @@ export default function QuestionScreen({
                 ${selectedAnswer === correctAnswer
                                 ? 'bg-green-50 border border-green-200'
                                 : 'bg-red-50 border border-red-200'}`}>
-                                <h3 className="font-bold">
-                                    {selectedAnswer === correctAnswer ? 'Correct!' : 'Incorrect'}
-                                </h3>
-                                <p>The correct answer is {correctAnswer}.</p>
+                                <div className="flex items-center gap-3">
+                                    {selectedAnswer === correctAnswer ? (
+                                        <CheckCircleIcon className="h-8 w-8 text-green-600 flex-shrink-0" />
+                                    ) : (
+                                        <XCircleIcon className="h-8 w-8 text-red-600 flex-shrink-0" />
+                                    )}
+                                    <div>
+                                        <h3 className="font-bold">
+                                            {selectedAnswer === correctAnswer ? 'Correct!' : 'Incorrect'}
+                                        </h3>
+                                        <p>The correct answer is {correctAnswer}.</p>
+                                    </div>
+                                </div>
                             </div>
                         )}
 
@@ -148,9 +157,9 @@ export default function QuestionScreen({
                                     onClick={() => !answerSubmitted && setSelectedAnswer(opt.letter)}
                                     className={`option p-4 mb-3 border rounded-lg cursor-pointer transition-colors
                     ${selectedAnswer === opt.letter ? 'bg-blue-100 border-blue-500' : 'hover:bg-gray-50'}
-                    ${showFeedback && opt.letter === correctAnswer ? 'bg-green-100 border-green-500' : ''}
+                    ${showFeedback && opt.letter === correctAnswer ? 'bg-green-200 border-green-500' : ''}
                     ${showFeedback && selectedAnswer === opt.letter && selectedAnswer !== correctAnswer
-                                        ? 'bg-red-100 border-red-500' : ''}`}
+                                        ? 'bg-red-200 border-red-500' : ''}`}
                                 >
                                     <div className="flex">
                                         <span className="font-bold mr-2">{opt.letter})</span>

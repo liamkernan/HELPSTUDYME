@@ -10,8 +10,7 @@ public class RateLimitingService {
     
     private final Map<String, UserRateLimit> userRateLimits = new ConcurrentHashMap<>();
     
-    // Rate limits: 30 questions per hour, 10 evaluations per hour
-    private static final int QUESTIONS_PER_HOUR = 30;
+    private static final int QUESTIONS_PER_HOUR = 60;
     private static final int EVALUATIONS_PER_HOUR = 10;
     private static final long WINDOW_MILLIS = TimeUnit.HOURS.toMillis(1);
     
@@ -30,7 +29,6 @@ public class RateLimitingService {
         
         long now = System.currentTimeMillis();
         
-        // Reset window if expired
         if (now - rateLimit.windowStart > WINDOW_MILLIS) {
             rateLimit.requestCount = 0;
             rateLimit.windowStart = now;

@@ -5,16 +5,16 @@ const API_BASE = process.env.REACT_APP_API_BASE;
 export const apiCall = async (endpoint, options = {}) => {
     try {
         const user = auth.currentUser;
-        if (!user) {
-            throw new Error('User not authenticated');
-        }
-
-        const token = await user.getIdToken();
         
         const defaultHeaders = {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         };
+
+        // Add authentication header only if user is logged in
+        if (user) {
+            const token = await user.getIdToken();
+            defaultHeaders['Authorization'] = `Bearer ${token}`;
+        }
 
         const requestOptions = {
             ...options,

@@ -56,7 +56,7 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
             </div>
 
             <div className="max-w-5xl text-center space-y-10">
-                <h1 className="text-3xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight leading-tight whitespace-nowrap">
+                <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold tracking-wide leading-tight whitespace-nowrap" style={{ fontFamily: '"Libre Baskerville", "Book Antiqua", serif' }}>
                     Master&nbsp;
                     <span
                         className={[
@@ -78,7 +78,7 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
                     for students. <b><i>Free forever.</i></b>
                 </p>
 
-                <div className="relative top-16 flex flex-col sm:flex-row flex-wrap gap-4 justify-center">
+                <div className="relative top-40 flex flex-col sm:flex-row flex-wrap gap-4 justify-center">
                     <button
                         onClick={onGetStarted}
                         className="px-6 py-3 bg-teal-500 hover:bg-green-500 rounded-2xl font-semibold transition"
@@ -93,12 +93,12 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
 
                     <button
                         onClick={onAbout}
-                        className="px-6 py-3 bg-pink-500/45 hover:bg-pink-500/70 rounded-2xl font-semibold transition"
+                        className="px-6 py-3 bg-white/20 hover:bg-pink-400/50 rounded-2xl font-semibold transition"
                     >About this Project</button>
                 </div>
             </div>
 
-            <footer className="mt-24 text-center text-sm text-gray-400">
+            <footer className="mt-24 relative top-32 text-center text-sm text-gray-400">
                 © {new Date().getFullYear()} helpstudy.me • Built by Liam Kernan
             </footer>
         </section>
