@@ -134,39 +134,40 @@ function QuestionHistory({ onBackToMenu }) {
         <div id="history-container" className="p-6">
             <div className="flex items-center justify-between mb-4">
                 <div>
-                    <h1 className="text-4xl font-bold mb-3 mt-4 text-white">Question History</h1>
-                    <p className="text-sm text-white mt-6 mb-3 italic">
+                    <h1 className="text-4xl font-bold mb-3 mt-4 text-white" style={{ fontFamily: '"Crimson Pro", "Crimson Text", serif' }}>Question History</h1>
+                    <p className="text-white italic font-semibold mt-6 mb-3">
                         <span className="text-green-500 font-bold">Green</span> = correct choice;{" "}
                         <span className="text-red-500 font-bold">Red</span> = incorrect choice
                     </p>
                 </div>
-                <button
-                    onClick={onBackToMenu}
-                    className="flex items-center gap-3 bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full shadow transition text-white"
-                >
-                    Back to Menu
-                </button>
-            </div>
-
-            {questions.length > 0 && (
-                <div className="mb-6 flex items-center gap-3">
-                    <label htmlFor="subject-filter" className="text-white font-semibold">
-                        Filter by Subject:
-                    </label>
-                    <select
-                        id="subject-filter"
-                        value={selectedSubject}
-                        onChange={(e) => setSelectedSubject(e.target.value)}
-                        className="bg-gray-800 border border-gray-600 text-white rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors min-w-0"
+                <div className="flex flex-col items-end gap-3">
+                    <button
+                        onClick={onBackToMenu}
+                        className="flex items-center gap-3 bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full shadow transition text-white"
                     >
-                        {getUniqueSubjects().map((subject) => (
-                            <option key={subject} value={subject}>
-                                {subject}
-                            </option>
-                        ))}
-                    </select>
+                        Back to Menu
+                    </button>
+                    {questions.length > 0 && (
+                        <div className="flex items-center gap-3">
+                            <label htmlFor="subject-filter" className="text-white mt-5 font-semibold">
+                                Filter by Subject:
+                            </label>
+                            <select
+                                id="subject-filter"
+                                value={selectedSubject}
+                                onChange={(e) => setSelectedSubject(e.target.value)}
+                                className="bg-gray-800 border mt-5 border-gray-600 text-white rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors min-w-0"
+                            >
+                                {getUniqueSubjects().map((subject) => (
+                                    <option key={subject} value={subject}>
+                                        {subject}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
                 </div>
-            )}
+            </div>
 
             {questions.length === 0 ? (
                 <p className="text-white text-2xl">sign in, or start studying ;)</p>

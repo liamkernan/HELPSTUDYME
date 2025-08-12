@@ -3,7 +3,7 @@ import "katex/dist/katex.min.css";
 import { useAuth } from "../AuthContext";
 
 export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
-    const words  = ["AP Exams", "SATs", "ACTs", "midterms", "finals", "quizzes"];
+    const words  = ["AP exams", "SAT tests", "midterms", "ACT tests", "finals", "quizzes"];
     const colors = [
         "text-indigo-300",
         "text-pink-400",
@@ -14,26 +14,48 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
     ];
 
     const { user, signIn, signOut, loading } = useAuth();
-    const [idx,   setIdx]   = useState(0);
-    const [fade,  setFade]  = useState(true);
+    const [idx, setIdx] = useState(0);
+    const [displayText, setDisplayText] = useState("");
+    const [isTyping, setIsTyping] = useState(true);
 
     useEffect(() => {
-        const iv = setInterval(() => {
-            setFade(false);
-            setTimeout(() => {
-                setIdx(i => (i + 1) % words.length);
-                setFade(true);
-            }, 700);
-        }, 2000);
-        return () => clearInterval(iv);
-    }, []);
+        let timeout;
+        const currentWord = words[idx];
+        
+        if (isTyping) {
+            // Typing effect
+            if (displayText.length < currentWord.length) {
+                timeout = setTimeout(() => {
+                    setDisplayText(currentWord.slice(0, displayText.length + 1));
+                }, 100);
+            } else {
+                // Wait before erasing
+                timeout = setTimeout(() => {
+                    setIsTyping(false);
+                }, 1500);
+            }
+        } else {
+            // Erasing effect
+            if (displayText.length > 0) {
+                timeout = setTimeout(() => {
+                    setDisplayText(displayText.slice(0, -1));
+                }, 50);
+            } else {
+                // Move to next word
+                setIdx((i) => (i + 1) % words.length);
+                setIsTyping(true);
+            }
+        }
+        
+        return () => clearTimeout(timeout);
+    }, [displayText, isTyping, idx, words]);
 
     return (
         <section className="
       animated-gradient
       min-h-screen
-      flex flex-col items-center justify-center
-      px-4 sm:px-6 text-gray-100
+      flex flex-col justify-center
+      pl-8 sm:pl-16 lg:pl-24 pr-4 sm:pr-6 text-gray-100
     ">
 
             <div className="absolute top-4 right-4 z-50">
@@ -55,33 +77,32 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
                 )}
             </div>
 
-            <div className="max-w-5xl text-center space-y-10">
-                <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold tracking-wide leading-tight whitespace-nowrap" style={{ fontFamily: '"Libre Baskerville", "Book Antiqua", serif' }}>
-                    Master&nbsp;
-                    <span
+            <div className="max-w-4xl text-left space-y-10">
+                <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold tracking-normal leading-tight whitespace-nowrap" style={{ fontFamily: '"Crimson Pro", "Crimson Text", serif' }}>
+                    <span className="inline-block">Master&nbsp;</span>
+                    <span 
                         className={[
-                            "inline-block transition-opacity duration-700",
-                            fade ? "opacity-100" : "opacity-0",
+                            "inline-block text-center relative",
                             colors[idx],
                         ].join(" ")}
-                        style={{ whiteSpace: "nowrap" }}
+                        style={{ width: "330px", fontFamily: '"Indie Flower", "Bradley Hand", cursive', textAlign: "center" }}
                     >
-            {words[idx]}
-          </span>
-                    &nbsp;the&nbsp;
-                    <span className="text-teal-400">Smart</span>&nbsp;Way
+                        {displayText}
+                        <span className="animate-pulse">|</span>
+                    </span>
+                    <span className="inline-block">&nbsp;the&nbsp;<span className="text-teal-400">Smart</span>&nbsp;Way</span>
                 </h1>
 
-                <p className="text-lg md:text-xl text-gray-300">
+                <p className="text-xl md:text-2xl text-gray-300" style={{ fontFamily: '"Crimson Pro", "Crimson Text", serif' }}>
                     Endless AI-generated practice questions, instant feedback, and progress
                     analytics&nbsp;— all in one streamlined tool built by a student,
                     for students. <b><i>Free forever.</i></b>
                 </p>
 
-                <div className="relative top-40 flex flex-col sm:flex-row flex-wrap gap-4 justify-center">
+                <div className="relative top-40 flex flex-col sm:flex-row flex-wrap gap-4 justify-start">
                     <button
                         onClick={onGetStarted}
-                        className="px-6 py-3 bg-teal-500 hover:bg-green-500 rounded-2xl font-semibold transition"
+                        className="px-6 py-3 bg-green-500 hover:bg-green-600 rounded-2xl font-semibold transition"
                     >Get Started</button>
 
                     {onViewHistory && (
@@ -98,7 +119,7 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
                 </div>
             </div>
 
-            <footer className="mt-24 relative top-32 text-center text-sm text-gray-400">
+            <footer className="mt-24 relative top-32 text-left text-sm text-gray-400">
                 © {new Date().getFullYear()} helpstudy.me • Built by Liam Kernan
             </footer>
         </section>
