@@ -58,6 +58,10 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
       pl-8 sm:pl-16 lg:pl-24 pr-4 sm:pr-6 text-gray-100
     ">
 
+            <div className="text-lg absolute top-6 left-8 sm:left-16 lg:left-24 z-50">
+                <span className="text-white font-bold">(helpstudy.me)</span>
+            </div>
+
             <div className="absolute top-4 right-4 z-50">
                 {!loading && (
                     user ? (
@@ -95,7 +99,7 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
 
                 <p className="text-xl md:text-2xl text-gray-300" style={{ fontFamily: '"Crimson Pro", "Crimson Text", serif' }}>
                     Endless AI-generated practice questions, instant feedback, and progress
-                    analytics&nbsp;— all in one streamlined tool built by a student,
+                    analytics&nbsp;— <br />all in one streamlined tool built by a student,
                     for students. <b><i>Free forever.</i></b>
                 </p>
 
