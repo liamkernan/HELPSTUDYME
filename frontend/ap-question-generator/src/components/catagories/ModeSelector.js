@@ -15,21 +15,21 @@ export default function ModeSelector({ onAP, onSAT, onACT, onYOURS, onBack }) {
             label: "AP Exams",
             onClick: onAP,
             icon: GraduationCap,
-            bg: "bg-blue-500",
+            bg: "bg-cyan-500/10 backdrop-blur border border-blue-400/30",
         },
         {
             key: "sat",
             label: "SAT",
             onClick: onSAT,
             icon: Landmark,
-            bg: "bg-pink-500",
+            bg: "bg-pink-500/10 backdrop-blur border border-pink-400/30",
         },
         {
             key: "act",
             label: "ACT",
             onClick: onACT,
             icon: BrainCircuit,
-            bg: "bg-teal-500",
+            bg: "bg-green-500/10 backdrop-blur border border-emerald-400/30",
         },
         {
             key: "yours",
@@ -43,7 +43,7 @@ export default function ModeSelector({ onAP, onSAT, onACT, onYOURS, onBack }) {
     const { user, signIn, signOut, loading } = useAuth();
 
     return (
-        <section className="relative animated-gradient min-h-screen flex flex-col items-center justify-center text-gray-100 px-4 sm:px-6">
+        <section className="relative animated-gradient min-h-screen flex flex-col items-center justify-center text-gray-100 px-4 sm:px-6 py-8">
             <div className="absolute top-4 left-4">
                 <button
                     onClick={onBack}
@@ -75,15 +75,15 @@ export default function ModeSelector({ onAP, onSAT, onACT, onYOURS, onBack }) {
                     )
                 )}
             </div>
-            <div className="flex flex-wrap justify-center gap-10 max-w-6xl">
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-10 max-w-6xl">
                 {modes.map(({ key, label, onClick, icon: Icon, bg }) => (
                     <button
                         key={key}
                         onClick={onClick}
-                        className={`flex flex-col items-center justify-between ${bg} rounded-3xl shadow-xl w-56 h-80 p-8 transition-transform duration-200 hover:-translate-y-2 hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-white/40`}
+                        className={`flex flex-col items-center justify-between ${bg} rounded-3xl shadow-xl w-40 h-56 sm:w-48 sm:h-64 md:w-56 md:h-80 p-4 sm:p-6 md:p-8 transition-transform duration-200 hover:-translate-y-2 hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-white/40`}
                     >
-                        <Icon className="h-20 w-20" />
-                        <span className="mt-auto text-xl font-semibold tracking-wide text-center">
+                        <Icon className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20" />
+                        <span className="mt-auto text-sm sm:text-lg md:text-xl font-semibold tracking-wide text-center">
               {label}
             </span>
                     </button>

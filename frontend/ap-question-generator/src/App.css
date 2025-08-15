@@ -43,11 +43,11 @@
 .animated-gradient {
     background: linear-gradient(
             135deg,
-            #3535ff,
-            rgba(144, 74, 255, 0.61),
-            #22228e,
-            #8038cf,
-            #007efb
+            #1a1a2e,
+            rgba(45, 25, 75, 0.7),
+            #0f0f23,
+            #3d1f4a,
+            #1f2d47
     );
     background-size: 600% 600%;
     animation: gradientAnimation 15s ease infinite;
@@ -56,11 +56,11 @@
 .animated-gradient-blue {
     background: linear-gradient(
             135deg,
-            #3535ff,
-            rgba(45, 71, 250, 0.61),
-            #22418e,
-            #a25eec,
-            #007efb
+            #4f46e5,
+            #3b82f6,
+            #1e40af,
+            #6366f1,
+            #0ea5e9
     );
     background-size: 600% 600%;
     animation: gradientAnimation 15s ease infinite;
@@ -69,11 +69,11 @@
 .animated-gradient-red {
     background: linear-gradient(
             135deg,
-            #ff3d3d,
-            #ff6262,
-            #ff3c4d,
-            #ffa897,
-            #e1497d
+            #ec4899,
+            #f97316,
+            #dc2626,
+            #e11d48,
+            #c2410c
     );
     background-size: 600% 600%;
     animation: gradientAnimation 15s ease infinite;
@@ -82,11 +82,11 @@
 .animated-gradient-green {
     background: linear-gradient(
             135deg,
-            #72ff68,
-            #3ad181,
-            #6df178,
-            #5cec5e,
-            #7aef81
+            #10b981,
+            #059669,
+            #0d9488,
+            #14b8a6,
+            #06b6d4
     );
     background-size: 600% 600%;
     animation: gradientAnimation 15s ease infinite;

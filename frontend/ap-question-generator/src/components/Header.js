@@ -5,7 +5,7 @@ function Header({ onBack }) {
     const { user, signIn, signOut, loading } = useAuth();
 
     return (
-        <header className="relative bg-blue-900 text-white p-4 shadow-md">
+        <header className="relative bg-gray-900 text-white p-4 shadow-md">
             <div className="absolute top-4 right-4">
                 {!loading && (
                     user ? (

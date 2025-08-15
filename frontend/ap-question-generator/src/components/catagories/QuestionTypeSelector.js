@@ -16,7 +16,7 @@ function QuestionTypeSelector({ onSelectType, onBack, activeSubject }) {
 
             <button
                 onClick={onBack}
-                className="absolute top-8 right-8 px-6 py-3 bg-gray-300 hover:bg-gray-500 text-white px-3 py-1 rounded-full shadow-lg backdrop-blur transition"
+                className="absolute top-8 right-8 px-4 py-1 bg-gray-400 hover:bg-gray-500 text-white px-3 py-1 rounded-full shadow-lg backdrop-blur transition"
             >
 
                 <span className="text-sm font-medium">Back to Menu</span>

@@ -131,32 +131,32 @@ function QuestionHistory({ onBackToMenu }) {
     if (error)   return <div className="p-6 text-red-400">Error: {error}</div>;
 
     return (
-        <div id="history-container" className="p-6">
-            <div className="flex items-center justify-between mb-4">
+        <div id="history-container" className="p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
                 <div>
-                    <h1 className="text-4xl font-bold mb-3 mt-4 text-white" style={{ fontFamily: '"Crimson Pro", "Crimson Text", serif' }}>Question History</h1>
-                    <p className="text-white italic font-semibold mt-6 mb-3">
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 mt-4 text-white" style={{ fontFamily: '"Crimson Pro", "Crimson Text", serif' }}>Question History</h1>
+                    <p className="text-sm sm:text-base text-white italic font-semibold mt-6 mb-3">
                         <span className="text-green-500 font-bold">Green</span> = correct choice;{" "}
                         <span className="text-red-500 font-bold">Red</span> = incorrect choice
                     </p>
                 </div>
-                <div className="flex flex-col items-end gap-3">
+                <div className="flex flex-col sm:items-end gap-3 w-full sm:w-auto">
                     <button
                         onClick={onBackToMenu}
-                        className="flex items-center gap-3 bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full shadow transition text-white"
+                        className="flex items-center justify-center sm:justify-start gap-3 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full shadow transition text-white text-sm w-full sm:w-auto">
                     >
                         Back to Menu
                     </button>
                     {questions.length > 0 && (
-                        <div className="flex items-center gap-3">
-                            <label htmlFor="subject-filter" className="text-white mt-5 font-semibold">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
+                            <label htmlFor="subject-filter" className="text-white text-sm sm:text-base mt-0 sm:mt-5 font-semibold whitespace-nowrap">
                                 Filter by Subject:
                             </label>
                             <select
                                 id="subject-filter"
                                 value={selectedSubject}
                                 onChange={(e) => setSelectedSubject(e.target.value)}
-                                className="bg-gray-800 border mt-5 border-gray-600 text-white rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors min-w-0"
+                                className="bg-gray-800 border mt-0 sm:mt-5 border-gray-600 text-white rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors w-full sm:w-auto min-w-0">
                             >
                                 {getUniqueSubjects().map((subject) => (
                                     <option key={subject} value={subject}>
@@ -170,11 +170,11 @@ function QuestionHistory({ onBackToMenu }) {
             </div>
 
             {questions.length === 0 ? (
-                <p className="text-white text-2xl">sign in, or start studying ;)</p>
+                <p className="text-white text-lg sm:text-2xl text-center sm:text-left">sign in, or start studying ;)</p>
             ) : filteredQuestions.length === 0 ? (
-                <p className="text-white text-lg">No questions found for "{selectedSubject}"</p>
+                <p className="text-white text-base sm:text-lg text-center sm:text-left">No questions found for "{selectedSubject}"</p>
             ) : (
-                <ul className="space-y-3">
+                <ul className="space-y-2 sm:space-y-3">
                     {filteredQuestions.map((q, idx) => {
                         const bgClass = q.match
                             ? "bg-green-600/60 hover:bg-gray-900"
@@ -183,13 +183,13 @@ function QuestionHistory({ onBackToMenu }) {
                         return (
                             <li
                                 key={idx}
-                                className={`p-4 border border-gray-700 rounded-xl shadow transition-colors ${bgClass}`}
+                                className={`p-3 sm:p-4 border border-gray-700 rounded-xl shadow transition-colors ${bgClass}`}
                             >
-                                <div className="flex items-center justify-between mb-3">
-                                    <p className="text-white font-semibold">{q.topic} Prompt:</p>
-                                    <p className="text-gray-400 text-sm italic">{formatTimestamp(q.createdAt)}</p>
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-2">
+                                    <p className="text-white font-semibold text-sm sm:text-base">{q.topic} Prompt:</p>
+                                    <p className="text-gray-400 text-xs sm:text-sm italic">{formatTimestamp(q.createdAt)}</p>
                                 </div>
-                                <div className="whitespace-pre-wrap space-y-1 mb-2">
+                                <div className="whitespace-pre-wrap space-y-1 mb-2 text-sm sm:text-base">
                                     {q.lines.map((line, i) => {
                                         let cls = "text-gray-300";
                                         if (i === q.correctIndex) {
@@ -198,7 +198,7 @@ function QuestionHistory({ onBackToMenu }) {
                                             cls = "text-gray-300/80 line-through";
                                         }
                                         return (
-                                            <p key={i} className={cls}>
+                                            <p key={i} className={`${cls} break-words`}>
                                                 {line}
                                             </p>
                                         );

@@ -86,17 +86,17 @@ export default function QuestionScreen({
 
     /* ── Layout & content ----------------------------------------- */
     return (
-        <div className="question-screen p-6">
+        <div className="question-screen p-4 sm:p-6">
             {/* Header */}
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-white text-2xl font-bold">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-4">
+                <h2 className="text-white text-xl sm:text-2xl font-bold">
                     {activeSubject && formatSubjectName(activeSubject)} Question
                 </h2>
 
-                <div className="flex items-center space-x-3">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
                     <button
                         onClick={() => setShowNotepad(v => !v)}
-                        className={`flex items-center space-x-2 px-3 py-1 rounded-full shadow-lg backdrop-blur transition
+                        className={`flex items-center justify-center space-x-2 px-3 py-2 rounded-full shadow-lg backdrop-blur transition text-sm
               ${showNotepad ? 'bg-blue-600 hover:bg-blue-700 text-white'
                             : 'bg-white/20 hover:bg-white/30 text-white'}`}
                     >
@@ -106,7 +106,7 @@ export default function QuestionScreen({
 
                     <button
                         onClick={onBackToMenu}
-                        className="flex items-center space-x-2 bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-full shadow-lg backdrop-blur transition"
+                        className="flex items-center justify-center space-x-2 bg-white/20 hover:bg-white/30 text-white px-3 py-2 rounded-full shadow-lg backdrop-blur transition text-sm"
                     >
                         <span className="text-sm font-medium">Back to Menu</span>
                     </button>
@@ -120,30 +120,30 @@ export default function QuestionScreen({
                     <p className="text-white">Generating question...</p>
                 </div>
             ) : (
-                <div className={`grid gap-6 grid-cols-1 ${showNotepad ? 'lg:grid-cols-3' : ''}`}>
+                <div className={`grid gap-4 sm:gap-6 grid-cols-1 ${showNotepad ? 'lg:grid-cols-3' : ''}`}>
                     {/* Question card (2/3 width on lg) */}
-                    <div className="bg-white p-6 rounded-lg shadow-md lg:col-span-2">
+                    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md lg:col-span-2">
                         {/* Prompt */}
-                        <div className="question-text mb-6">
+                        <div className="question-text mb-4 sm:mb-6 text-sm sm:text-base">
                             <EnhancedRenderer text={promptText} />
                         </div>
 
                         {showFeedback && (
-                            <div className={`mt-6 mb-6 p-4 rounded-lg
+                            <div className={`mt-4 sm:mt-6 mb-4 sm:mb-6 p-3 sm:p-4 rounded-lg
                 ${selectedAnswer === correctAnswer
                                 ? 'bg-green-50 border border-green-200'
                                 : 'bg-red-50 border border-red-200'}`}>
-                                <div className="flex items-center gap-3">
+                                <div className="flex items-start sm:items-center gap-3">
                                     {selectedAnswer === correctAnswer ? (
                                         <CheckCircleIcon className="h-8 w-8 text-green-600 flex-shrink-0" />
                                     ) : (
                                         <XCircleIcon className="h-8 w-8 text-red-600 flex-shrink-0" />
                                     )}
                                     <div>
-                                        <h3 className="font-bold">
+                                        <h3 className="font-bold text-sm sm:text-base">
                                             {selectedAnswer === correctAnswer ? 'Correct!' : 'Incorrect'}
                                         </h3>
-                                        <p>The correct answer is {correctAnswer}.</p>
+                                        <p className="text-sm sm:text-base">The correct answer is {correctAnswer}.</p>
                                     </div>
                                 </div>
                             </div>
@@ -155,27 +155,38 @@ export default function QuestionScreen({
                                 <div
                                     key={opt.letter}
                                     onClick={() => !answerSubmitted && setSelectedAnswer(opt.letter)}
-                                    className={`option p-4 mb-3 border rounded-lg cursor-pointer transition-colors
+                                    className={`option p-3 sm:p-4 mb-3 border rounded-lg cursor-pointer transition-colors
                     ${selectedAnswer === opt.letter ? 'bg-blue-100 border-blue-500' : 'hover:bg-gray-50'}
                     ${showFeedback && opt.letter === correctAnswer ? 'bg-green-200 border-green-500' : ''}
                     ${showFeedback && selectedAnswer === opt.letter && selectedAnswer !== correctAnswer
                                         ? 'bg-red-200 border-red-500' : ''}`}
                                 >
-                                    <div className="flex">
-                                        <span className="font-bold mr-2">{opt.letter})</span>
-                                        <EnhancedRenderer text={opt.text} />
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex text-sm sm:text-base">
+                                            <span className="font-bold mr-2">{opt.letter})</span>
+                                            <EnhancedRenderer text={opt.text} />
+                                        </div>
+                                        {showFeedback && (
+                                            <div className="ml-4 flex-shrink-0">
+                                                {opt.letter === correctAnswer ? (
+                                                    <CheckCircleIcon className="h-6 w-6 text-green-600" />
+                                                ) : selectedAnswer === opt.letter && selectedAnswer !== correctAnswer ? (
+                                                    <XCircleIcon className="h-6 w-6 text-red-600" />
+                                                ) : null}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             ))}
                         </div>
 
                         {/* Actions */}
-                        <div className="actions mt-6 flex justify-between">
+                        <div className="actions mt-4 sm:mt-6 flex flex-col sm:flex-row justify-between gap-3 sm:gap-0">
                             {!answerSubmitted ? (
                                 <button
                                     onClick={onSubmitAnswer}
                                     disabled={!selectedAnswer}
-                                    className={`px-6 py-2 rounded-lg
+                                    className={`w-full sm:w-auto px-6 py-3 sm:py-2 rounded-lg text-sm sm:text-base
                     ${selectedAnswer
                                         ? 'bg-blue-600 hover:bg-blue-700 text-white'
                                         : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
@@ -185,7 +196,7 @@ export default function QuestionScreen({
                             ) : (
                                 <button
                                     onClick={onNewQuestion}
-                                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg"
+                                    className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-6 py-3 sm:py-2 rounded-lg text-sm sm:text-base"
                                 >
                                     Next Question
                                 </button>

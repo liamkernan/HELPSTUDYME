@@ -436,7 +436,7 @@ function AppContent() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col bg-blue-950">
+        <div className="min-h-screen flex flex-col bg-slate-900">
             {renderPage()}
         </div>
     );
