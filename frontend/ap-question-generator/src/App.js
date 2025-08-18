@@ -336,7 +336,7 @@ function AppContent() {
             case "type-select":
                 return (
                     <>
-                        <Header onBack={() => navigate("landing")} />
+
                         <main className="flex-grow container mx-auto p-4">
                             <QuestionTypeSelector
                                 activeSubject={activeSubject}

@@ -1,5 +1,6 @@
-import React from "react";
+import React, {useState} from "react";
 import {ArrowLeft} from "lucide-react";
+import { useAuth } from "../../AuthContext";
 
 function QuestionTypeSelector({ onSelectType, onBack, activeSubject }) {
     const formatSubjectName = (subject) => {
@@ -9,9 +10,34 @@ function QuestionTypeSelector({ onSelectType, onBack, activeSubject }) {
             .join(" ");
     };
 
+    const { user, signIn, signOut, loading } = useAuth();
+    const [idx, setIdx] = useState(0);
+    const [displayText, setDisplayText] = useState("");
+    const [isTyping, setIsTyping] = useState(true);
+
     return (
 
-        <div className="max-w-3xl mx-auto mt-10 p-8 bg-white rounded-xl shadow-lg relative">
+        <div className="max-w-3xl mx-auto mt-10 md:mt-32 p-8 bg-white rounded-xl shadow-lg relative">
+
+
+            <div className="absolute top-4 right-4 z-50">
+                {!loading && (
+                    user ? (
+                        <div className="flex items-center gap-3">
+                            <img src={user.photoURL} alt="" className="w-8 h-8 rounded-full" />
+                            <button
+                                onClick={signOut}
+                                className="px-3 py-1 bg-white/10 hover:bg-white/20 rounded-xl text-sm"
+                            >Sign out</button>
+                        </div>
+                    ) : (
+                        <button
+                            onClick={signIn}
+                            className="px-4 py-1 bg-teal-500 hover:bg-teal-600 rounded-xl text-sm font-semibold"
+                        >Sign in</button>
+                    )
+                )}
+            </div>
 
 
             <button

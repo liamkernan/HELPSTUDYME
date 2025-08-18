@@ -75,7 +75,7 @@ export default function ModeSelector({ onAP, onSAT, onACT, onYOURS, onBack }) {
                     )
                 )}
             </div>
-            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-10 max-w-6xl">
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-10 max-w-6xl -mt-52 md:mt-0">
                 {modes.map(({ key, label, onClick, icon: Icon, bg }) => (
                     <button
                         key={key}

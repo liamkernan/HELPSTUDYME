@@ -54,7 +54,7 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
         <section className="
       animated-gradient
       min-h-screen
-      flex flex-col justify-start md:justify-center pt-8 md:pt-0
+      flex flex-col justify-center
       pl-8 sm:pl-16 lg:pl-24 pr-4 sm:pr-6 text-gray-100
     ">
 
@@ -81,9 +81,9 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
                 )}
             </div>
 
-            <div className="max-w-4xl text-left space-y-20 md:space-y-10">
+            <div className="max-w-4xl text-left space-y-10 -mt-40 md:mt-0">
                 {/* Desktop version - hidden on mobile */}
-                <h1 className="hidden md:block text-3xl sm:text-5xl lg:text-7xl font-bold tracking-normal leading-tight whitespace-nowrap" style={{ fontFamily: '"Crimson Pro", "Crimson Text", serif' }}>
+                <h1 className="hidden md:block  text-3xl sm:text-5xl lg:text-7xl font-bold tracking-normal leading-tight whitespace-nowrap" style={{ fontFamily: '"Crimson Pro", "Crimson Text", serif' }}>
                     <span className="inline-block">Master&nbsp;</span>
                     <span 
                         className={[
@@ -99,7 +99,7 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
                 </h1>
                 
                 {/* Mobile version */}
-                <h1 className="block md:hidden text-5xl font-bold tracking-normal leading-tight text-center space-y-3 mt-40" style={{ fontFamily: '"Crimson Pro", "Crimson Text", serif' }}>
+                <h1 className="block md:hidden text-5xl font-bold tracking-normal leading-tight text-center space-y-3 -mt-8" style={{ fontFamily: '"Crimson Pro", "Crimson Text", serif' }}>
                     <div className="block">
                         Master{" "}
                         <span 
@@ -116,14 +116,13 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
                     <div className="block">the <span className="text-green-500">Smart</span> Way</div>
                 </h1>
 
-                <p className="text-lg md:text-2xl text-gray-300 mt-16 md:mt-0 text-center md:text-left" style={{ fontFamily: '"Crimson Pro", "Crimson Text", serif' }}>
-                    <span className="block md:inline">Endless AI-generated practice questions,</span>
-                    <span className="block md:inline"> instant feedback, and progress analytics&nbsp;— </span>
-                    <span className="block md:inline"><br className="hidden md:block" />all in one streamlined tool built by a student,</span>
-                    <span className="block md:inline"> for students. <b><i>Free forever.</i></b></span>
+                <p className="text-xl md:text-2xl text-gray-300" style={{ fontFamily: '"Crimson Pro", "Crimson Text", serif' }}>
+                    Endless AI-generated practice questions, instant feedback, and progress
+                    analytics&nbsp;— <br />all in one streamlined tool built by a student,
+                    for students. <b><i>Free forever.</i></b>
                 </p>
 
-                <div className="relative top-4 flex flex-col sm:flex-row flex-wrap gap-4 justify-start">
+                <div className="relative top-20 md:top-40  flex flex-col sm:flex-row flex-wrap gap-4 justify-start">
                     <button
                         onClick={onGetStarted}
                         className="px-6 py-3 bg-green-500 hover:bg-green-600 rounded-2xl font-semibold transition"
@@ -143,7 +142,8 @@ export default function LandingPage({ onGetStarted, onViewHistory, onAbout }) {
                 </div>
             </div>
 
-            <footer className="mt-24 relative top-32 text-left text-sm text-gray-400">
+            <footer className="mt-16 md:mt-24 relative top-32 text-left text-sm
+  text-gray-400">
                 © {new Date().getFullYear()} helpstudy.me • Built by Liam Kernan
             </footer>
         </section>

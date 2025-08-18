@@ -19,19 +19,16 @@
 }
 
 :root {
-    /* ▷ Your new project colors */
-    --gradient-start:   #3535ff;  /* vivid blue */
-    --gradient-accent1: rgba(144, 74, 255, 0.61);  /* your button-primary */
-    --gradient-mid: #22228e;  /* lavender-blue */
-    --gradient-accent2: #8038cf;  /* button-primary-hover */
-    --gradient-end: #007efb;  /* mint-blue */
+    --gradient-start:   #3535ff;
+    --gradient-accent1: rgba(144, 74, 255, 0.61);
+    --gradient-mid: #22228e;
+    --gradient-accent2: #8038cf;
+    --gradient-end: #007efb;
 
     --text-primary:    #F8FAFC;
     --text-secondary:  #CBD5E0;
 }
 
-/* ▷ Faster, richer gradient animation */
-/* Shared animation */
 @keyframes gradientAnimation {
     0%   { background-position: 0% 50%; }
     25%  { background-position: 50% 50%; }
@@ -51,6 +48,12 @@
     );
     background-size: 600% 600%;
     animation: gradientAnimation 15s ease infinite;
+}
+
+@media (max-width: 767px) {
+    .animated-gradient {
+        min-height: 130vh;
+    }
 }
 
 .animated-gradient-blue {
