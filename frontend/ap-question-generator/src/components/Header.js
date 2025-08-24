@@ -44,12 +44,10 @@ function Header({ onBack }) {
                     textDecoration: 'none'
                 }}
             >
-                <h1 className="text-3xl font-bold">HELP ME STUDY!</h1>
+                <h1 className="text-2xl font-bold mb-2">(helpstudy.me)</h1>
             </button>
 
-            <p className="text-md mt-1">
-                Using AI as a resource to help students test better. <i>Free forever.</i>
-            </p>
+
         </header>
     );
 }

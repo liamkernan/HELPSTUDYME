@@ -131,7 +131,7 @@ export default function StudyAnything({
               </span>
                         </button>
 
-                        {/* Study Material */}
+
                         <button
                             onClick={() => onSelectStudyMaterial(submittedSubject)}
                             className="
