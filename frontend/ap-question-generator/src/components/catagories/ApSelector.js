@@ -56,11 +56,11 @@ export default function ApSelector({ onSelectSubject, onViewHistory, onBack }) {
             </div>
 
             <div className="max-w-5xl w-full mt-10 p-8 bg-white/10 backdrop-blur border border-white/20 rounded-2xl shadow-2xl">
-                <h1 className="text-3xl sm:text-5xl md:text-5xl font-bold mb-4 text-center text-white tracking-wide" style={{ fontFamily: '"Crimson Pro", "Crimson Text", serif' }}>
+                <h1 className="text-2xl sm:text-5xl md:text-5xl font-bold mb-4 text-center text-white tracking-wide" >
                     AP Practice Questions
                 </h1>
-                <p className="text-xl md:text-2xl text-center text-gray-300 mb-8" style={{ fontFamily: '"Crimson Pro", "Crimson Text", serif' }}>
-                    Unlimited AI-generated questions and instant feedback—<b><i>free forever.</i></b>
+                <p className="text-xl md:text-xl text-center text-gray-300 mb-8">
+                    Unlimited AI-generated questions and instant feedback,  <b><i> free forever.</i></b>
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
