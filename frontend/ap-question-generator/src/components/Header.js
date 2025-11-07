@@ -44,7 +44,7 @@ function Header({ onBack }) {
                     textDecoration: 'none'
                 }}
             >
-                <h1 className="text-2xl font-bold mb-2">(helpstudy.me)</h1>
+                <h1 className="text-2xl font-bold mt-1 mb-1">(helpstudy.me)</h1>
             </button>
 
 

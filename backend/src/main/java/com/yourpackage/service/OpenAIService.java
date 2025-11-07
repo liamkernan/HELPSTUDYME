@@ -118,7 +118,7 @@ public class OpenAIService {
 
             if ("free-response".equals(type)) {
                 systemPrompt = "You are an expert on all AP classes. Create challenging and detailed free response questions. Only provide the question and any necessary context. No sample answers or solutions. Make sure to mark ONLY THE BEGINNING of each section of the question (for example, A. B. C. D.) with 5 astricks (*****) after. Make sure the question is appropriate for AP-level assessment. Make sure to include texts and context for the student to read, if there are background documents include them entirely. Start your response with the context section.";
-                creditdiff = 4000;
+                creditdiff = 30000;
                 model = "gpt-4o-mini";
             } else {
                 // Enhanced system prompt for math accuracy
@@ -129,7 +129,6 @@ public class OpenAIService {
                                       subject.toLowerCase().contains("chemistry");
 
                 if (isMathSubject) {
-                    // For math subjects, use a two-step approach for better accuracy
                     return generateMathQuestionWithVerification(diversePrompt, subject);
                 }
 
@@ -138,7 +137,7 @@ public class OpenAIService {
                 model = "gpt-4o-mini";
             }
 
-            // Use Chat Completions API with gpt-4o-mini (fast, non-reasoning model)
+            // Use Chat Completions API with gpt-4o-mini for better formatting
             var chatRequest = ChatRequest.builder()
                     .model(model)
                     .message(ChatMessage.SystemMessage.of(systemPrompt))
@@ -186,7 +185,7 @@ public class OpenAIService {
                     "At the end, clearly state: 'FINAL ANSWER: [your answer]'\n\n" +
                     "Make sure your calculations are correct and show your work clearly.";
             
-            // Use gpt-4o-mini for faster responses
+            // Use gpt-4o-mini for better math accuracy and formatting
             var solutionRequest = ChatRequest.builder()
                     .model("gpt-4o-mini")
                     .message(ChatMessage.SystemMessage.of("You are a precise mathematics expert."))
@@ -220,7 +219,7 @@ public class OpenAIService {
                     "Only provide the question and the 4 options, no explanations.\n\n" +
                     "Format:\n[Question text]\nA) Option 1\nB***) Correct option\nC) Option 3\nD) Option 4";
             
-            // Use gpt-4o-mini for faster responses
+            // Use gpt-4o-mini for better formatting
             var questionRequest = ChatRequest.builder()
                     .model("gpt-4o-mini")
                     .message(ChatMessage.SystemMessage.of("You are creating multiple choice questions with pre-verified answers."))
@@ -252,7 +251,7 @@ public class OpenAIService {
                 "Use LaTeX formatting with \\[...\\] for display math and \\(...\\) for inline math. " +
                 "Format: Question followed by A) B) C) D) options.";
         
-        // Use gpt-4o-mini for faster responses
+        // Use gpt-4o-mini for better formatting
         var chatRequest = ChatRequest.builder()
                 .model("gpt-4o-mini")
                 .message(ChatMessage.SystemMessage.of(systemPrompt))
@@ -275,7 +274,6 @@ public class OpenAIService {
                 model = "gpt-4o-mini";
 
 
-            // Use gpt-4o-mini for faster responses
             var chatRequest = ChatRequest.builder()
                     .model(model)
                     .message(ChatMessage.SystemMessage.of(systemPrompt))
@@ -309,7 +307,7 @@ public class OpenAIService {
 
             String userPrompt = "Question: " + question + "\n\nStudent response: " + response;
 
-            // Use gpt-4o-mini for faster responses
+            // Use gpt-4o-mini for evaluation
             var chatRequest = ChatRequest.builder()
                     .model("gpt-4o-mini")
                     .message(ChatMessage.SystemMessage.of(systemPrompt))

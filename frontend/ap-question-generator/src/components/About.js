@@ -18,13 +18,13 @@ export default function About({ onBack }) {
                 <p className="pt-5 mb-2">
                     <strong>helpstudy.me</strong> is an AI-powered study companion built
                     to generate unlimited practice questions, deliver instant feedback,
-                    and track your progress—completely free.
+                    and track your progress.
                 </p>
                 <p className="mb-9">
                     Under the hood, it’s a React front-end with KaTeX for beautiful
                     math rendering, talking to a back-end that proxies to OpenAI’s
                     API to craft questions across AP, SAT, ACT, and any other “quiz”
-                    you want to master. It also provide feedback on Free Response writing, custom study guides for any topic of the users choice, and advice on studying priorities based on question performance.
+                    you want to master. It also provide feedback on Free Response writing, custom study guides for any topic of the users choice, and advice on studying priorities based on question performance. Full details on the documentation & tech stack used can be found in the GitHub Repo.
                 </p>
                 <p className={"mb-20"}>
                     Created by Liam Kernan as a way to help fellow

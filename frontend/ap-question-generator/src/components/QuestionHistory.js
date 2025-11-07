@@ -134,7 +134,7 @@ function QuestionHistory({ onBackToMenu }) {
         <div id="history-container" className="p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
                 <div>
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 mt-4 text-white" style={{ fontFamily: '"Crimson Pro", "Crimson Text", serif' }}>Question History</h1>
+                    <h1 className="text-2xl sm:text-3xl md:text-3xl font-bold mb-3 mt-4 text-white" >Question History</h1>
                     <p className="text-sm sm:text-base text-white italic font-semibold mt-6 mb-3">
                         <span className="text-green-500 font-bold">Green</span> = correct choice;{" "}
                         <span className="text-red-500 font-bold">Red</span> = incorrect choice
@@ -144,8 +144,8 @@ function QuestionHistory({ onBackToMenu }) {
                     <button
                         onClick={onBackToMenu}
                         className="flex items-center justify-center sm:justify-start gap-3 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full shadow transition text-white text-sm w-full sm:w-auto">
-                    >
-                        Back to Menu
+
+                        Back to Select
                     </button>
                     {questions.length > 0 && (
                         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
