@@ -28,9 +28,8 @@ public class OpenAIService {
     public OpenAIService(PromptMemoryService memoryService) {
         this.memoryService = memoryService;
 
-        // GPT-5 reasoning models require longer timeouts (can take 60+ seconds to respond)
         OkHttpClient httpClient = new OkHttpClient.Builder()
-                .connectTimeout(Duration.ofSeconds(30))
+                .connectTimeout(Duration.ofSeconds(20))
                 .readTimeout(Duration.ofSeconds(120))  // 2 minutes for GPT-5 reasoning
                 .writeTimeout(Duration.ofSeconds(30))
                 .build();
