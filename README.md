@@ -49,7 +49,7 @@
 
 <h2 className="text-3xl font-bold mt-10 mb-4">Contributing</h2>
 <p className="mb-9">
-  Contributions are welcome! Fork the repository, create a feature branch, commit your changes, and open a pull request.
+  Contributions are welcome; just open a pull request!
 </p>
 
 <h2 className="text-3xl font-bold mt-10 mb-4">License</h2>
